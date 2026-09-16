@@ -52,6 +52,41 @@ html.landing{height:auto!important;min-height:100%!important;overflow-x:hidden!i
   html.landing body.landing .map-tip{left:20px!important;right:20px!important;bottom:18px!important;max-width:none!important;font-size:10px!important;z-index:12}
 }
 </style>
+<style id="mobile-interaction-safe">
+/* Телефон: у текста, подсказки и кнопок свои уровни. Только узкие экраны. */
+@media (max-width:760px){
+  html.landing body.landing .photo-stage{height:580px!important}
+  html.landing body.landing .stage-copy{top:26px!important;right:20px!important;max-width:calc(100% - 40px)!important}
+  html.landing body.landing .stage-bottom{left:18px!important;right:18px!important;bottom:18px!important;gap:8px!important}
+  html.landing body.landing .stage-bottom .actions{width:100%}
+  html.landing body.landing .stage-bottom .action{flex:1;min-width:0;padding:11px 8px!important}
+  html.landing body.landing .scenario-readout{width:100%;padding:9px 11px!important}
+  html.landing body.landing #s2 .try-hint,
+  html.landing body.landing #s3 .try-hint{left:20px!important;right:auto!important;bottom:178px!important}
+
+  /* Климат: текст сверху, индикация в центре, управление у нижнего края. */
+  html.landing body.landing #s4 .photo-stage{height:600px!important}
+  html.landing body.landing #s4 .temp-dial{left:50%!important;right:auto!important;top:275px!important;width:155px!important;transform:translateX(-50%)}
+  html.landing body.landing #s4 .airflow{left:11%!important;right:auto!important;top:405px!important;width:78%!important}
+  html.landing body.landing #s4 .try-hint{left:20px!important;right:auto!important;bottom:82px!important}
+  html.landing body.landing #s4 .mode-chips{left:18px!important;right:18px!important;bottom:18px!important;justify-content:flex-end!important}
+
+  /* Медиа: эквалайзер, подсказка и вкладки выстроены вертикально. */
+  html.landing body.landing #s8 .media-visual{min-height:560px!important}
+  html.landing body.landing #s8 .media-title{left:22px!important;right:20px!important;top:28px!important}
+  html.landing body.landing #s8 .media-badge{top:auto!important;right:16px!important;bottom:156px!important}
+  html.landing body.landing #s8 .equalizer{left:18px!important;right:18px!important;bottom:132px!important;height:78px!important}
+  html.landing body.landing #s8 .media-prompt{left:18px!important;bottom:76px!important}
+  html.landing body.landing #s8 .media-tabs{left:18px!important;right:18px!important;bottom:18px!important}
+  html.landing body.landing #s8 .media-tabs .action{flex:1;text-align:center}
+
+  /* Энергия: подпись всегда выше переключателей и не касается графика. */
+  html.landing body.landing #s9 .energy-chart{min-height:385px!important}
+  html.landing body.landing #s9 .energy-switch{left:18px!important;right:18px!important;bottom:18px!important}
+  html.landing body.landing #s9 .energy-switch .action{flex:1}
+  html.landing body.landing #s9 .energy-switch:before{bottom:46px!important}
+}
+</style>
 <main class="deck" id="deck">
   <section class="slide cover active" id="s0"><div class="full"></div><div class="shade"></div><div class="grain"></div><div class="orbit-light"></div><div class="cover-sweep"></div><div class="cover-pulse"></div><header class="top"><div class="brand">VLASOV<b>TECH</b></div><div class="num">01 / 12</div></header><div class="cover-copy"><div class="eyebrow reveal">Интеллектуальная среда</div><h1 class="reveal d1">Дом, который<br>не требует<br><em>инструкции.</em></h1><p class="lead reveal d2">iRidi собирает свет, климат, безопасность и медиа в систему, которая выглядит частью интерьера и ощущается частью жизни.</p><div class="cover-pills reveal d3"><span class="pill">Квартира</span><span class="pill">Дом</span><span class="pill">Апартаменты</span><span class="pill">Офис</span></div></div><div class="interactive-note"><i>☝</i><span>Эта презентация интерактивная.<br>Нажимай на подсвеченные кнопки.</span></div><div class="footer"><span>Возможности iRidi</span><span class="progress"><i></i></span></div></section>
 
