@@ -342,8 +342,8 @@ body.cover #foot .fl{opacity:0}
 
 /* ===== mobile ===== */
 body.m{overflow:hidden}
-body.m #stage{left:0;top:0;margin:0;width:100vw;height:100%;transform:none!important}
-body.m .slide{padding:58px 18px 96px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+body.m #stage{position:fixed;inset:0;left:0;top:0;margin:0;width:100%;width:100dvw;height:100%;height:100dvh;transform:none}
+body.m .slide{width:100%;max-width:100%;padding:58px max(18px,env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
 body.m h1{font-size:34px}
 body.m h2{font-size:28px}
 body.m .lead{font-size:16px}
@@ -405,7 +405,7 @@ body.m .cur .ctl{left:12px;bottom:12px}
 body.m .sched .hrs{margin-left:0}
 body.m .sched .sr>span{width:70px}
 
-body.m #foot{background:linear-gradient(180deg,rgba(30,36,42,0),#1E242A 45%);left:0;right:0;bottom:0;padding:26px 16px 12px}
+body.m #foot{background:linear-gradient(180deg,rgba(30,36,42,0),#1E242A 45%);left:0;right:0;bottom:0;padding:26px max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
 body.m .blk h1{font-size:40px!important}
 body.m .chart .lg{flex-wrap:wrap;gap:6px 16px;font-size:12px}
 body.m .chart .lg span:last-child{margin-left:0!important}
@@ -414,6 +414,7 @@ body.m #pc7 .plan,body.m #pc8 .plan{position:relative;inset:auto;width:100%;heig
 body.m #pc8 .plan{aspect-ratio:1690/840}
 body.m .phone{left:auto!important;right:auto!important;top:auto!important;width:100%!important;max-width:300px}
 body.m #pc8 .app.wide{position:relative;left:auto;right:auto;bottom:auto;margin:8px 0 0;max-width:none}
+body.m .ghost{width:min(760px,145vw);right:-38vw;max-width:none}
 @media (prefers-reduced-motion: reduce){
   *,*:before,*:after{animation-duration:.001s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
   .active .sens .ring,.active .air,.active .airret,.active .radar,.active .eqb,.active .door,.active .doorn,.badge i{animation:none!important}
@@ -876,11 +877,30 @@ function lightLayer(id) {
   /* ---------- fit ---------- */
   function fit() {
     var W = window.innerWidth, H = window.innerHeight;
-    var mob = W < 760 || (W < 1000 && H > W * 1.1);
+    var ua = navigator.userAgent || '';
+    var mobileUA = /Android|iPhone|iPad|iPod|Mobile|HarmonyOS/i.test(ua);
+    var touch = ('ontouchstart' in window) || ((navigator.maxTouchPoints || 0) > 0);
+    var coarse = !!(window.matchMedia && matchMedia('(pointer:coarse)').matches);
+    var sw = Math.min((window.screen && screen.width) || W, (window.screen && screen.height) || H);
+    /* Mobile browsers may request a desktop viewport (980–1280 CSS px).
+       Device/touch signals keep the presentation in the full-width mobile layout. */
+    var mob = mobileUA || (touch && coarse && sw < 1000) || W < 760 || (W < 1100 && H > W * 1.05);
     document.body.classList.toggle('m', mob);
-    stage.style.transform = mob ? 'none' : 'scale(' + Math.min(W / 1600, H / 900) + ')';
+    if (mob) {
+      stage.style.transformOrigin = '0 0';
+      stage.style.width = '';
+      stage.style.height = '';
+      stage.style.transform = 'none';
+    } else {
+      stage.style.width = '';
+      stage.style.height = '';
+      stage.style.transformOrigin = '50% 50%';
+      stage.style.transform = 'scale(' + Math.min(W / 1600, H / 900) + ')';
+    }
   }
   window.addEventListener('resize', fit);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', function () { setTimeout(fit, 120); });
   fit();
 
   /* ---------- plans ---------- */
