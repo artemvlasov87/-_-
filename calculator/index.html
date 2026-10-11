@@ -34,6 +34,12 @@
     .result .price-value{font-size:1.15rem}.result .price-total{margin-top:6px;font-weight:600}.result p{overflow-wrap:anywhere}
     .form-bottom .secondary{text-decoration:none;text-align:center}.result [aria-disabled=true]{opacity:.45;pointer-events:none}
     @media(max-width:430px){.check-grid,.choices.two{grid-template-columns:1fr}.section{padding:16px}.result{padding:20px}}
+  
+    .financial-option{border-top:1px solid #ffffff24;margin-top:16px;padding-top:14px}
+    .finance-title{font-size:1rem;margin:0 0 12px}.finance-row{margin:12px 0}
+    .finance-total{border-left:3px solid var(--orange);padding-left:12px;margin-top:16px}
+    .result .finance-total .price-value{font-size:1.25rem;font-weight:700}
+    .price-amount{white-space:nowrap}
   </style>
 </head>
 <body>
@@ -62,14 +68,21 @@
           <label class="choice"><input type="checkbox" name="functions" value="leak"><span>Защита от протечек</span></label>
         </div>
       </fieldset>
-      <section class="section" aria-labelledby="priority-title"><div class="section-head"><span id="priority-number" class="num" aria-hidden="true">04</span><h2 id="priority-title">Главный приоритет</h2></div>
-        <fieldset><legend class="skip">Главный приоритет</legend><div class="choices two">
-          <label class="choice"><input type="radio" name="main_priority" value="budget" required><span>Экономно<small>Базовый уровень — Эконом</small></span></label>
-          <label class="choice"><input type="radio" name="main_priority" value="balance" required><span>Оптимально<small>Базовый уровень — Комфорт</small></span></label>
-          <label class="choice"><input type="radio" name="main_priority" value="automation" required><span>Максимум автоматизации<small>Базовый уровень — Премиум</small></span></label>
-          <label class="choice"><input type="radio" name="main_priority" value="design" required><span>Красивый интерфейс<small>Базовый уровень — Премиум</small></span></label>
-        </div></fieldset>
-      </section>
+      <fieldset id="electric-level-block" class="section" aria-labelledby="electric-level-title"><legend class="skip">Уровень электрики</legend><div class="section-head"><span class="num" aria-hidden="true">04</span><h2 id="electric-level-title">Уровень электрики</h2></div>
+        <div class="choices two">
+          <label class="choice"><input type="radio" name="electric_level" value="economy" required><span>Эконом<small>Базовая надёжная электрика без лишнего.</small></span></label>
+          <label class="choice"><input type="radio" name="electric_level" value="comfort" required><span>Комфорт<small>Оптимальный уровень для большинства объектов.</small></span></label>
+          <label class="choice"><input type="radio" name="electric_level" value="premium" required><span>Премиум<small>Более продуманная инженерия, больше возможностей и сложных решений.</small></span></label>
+        </div>
+      </fieldset>
+      <fieldset id="priority-block" class="section" hidden disabled aria-labelledby="priority-title"><legend class="skip">Главный приоритет</legend><div class="section-head"><span id="priority-number" class="num" aria-hidden="true">05</span><h2 id="priority-title">Главный приоритет</h2></div>
+        <div class="choices two">
+          <label class="choice"><input type="radio" name="main_priority" value="budget" required><span>Экономно<small>Доступный вход в автоматизацию.</small></span></label>
+          <label class="choice"><input type="radio" name="main_priority" value="balance" required><span>Оптимально<small>Баланс цены, функций и надёжности.</small></span></label>
+          <label class="choice"><input type="radio" name="main_priority" value="automation" required><span>Максимум автоматизации<small>Больше инженерной логики и возможностей расширения.</small></span></label>
+          <label class="choice"><input type="radio" name="main_priority" value="design" required><span>Красивый интерфейс<small>Акцент на сценарии, визуальный опыт и удобство управления.</small></span></label>
+        </div>
+      </fieldset>
       <div class="form-bottom actions"><button type="submit" class="secondary">К результату</button><button type="reset" class="secondary">Сбросить</button></div>
     </form>
     <aside id="result" tabindex="-1" aria-labelledby="result-title"><div class="result">
@@ -84,7 +97,7 @@
       </div>
     </div></aside>
   </div>
-  <footer class="foot">VlasovTech · Ориентир не является точной сметой. Состав и стоимость уточним по плану объекта. <a href="tel:+79100071727">+7 (910) 007-17-27</a></footer>
+  <footer class="foot">VlasovTech · Ориентир стартового этапа не является точной сметой. Состав и стоимость уточним по плану объекта. <a href="tel:+79100071727">+7 (910) 007-17-27</a></footer>
 </main>
 <script>
 
@@ -285,16 +298,91 @@ const publicPriceGrid = {
   }
 };
 
-// Only an adapter for the five client questions. No new recommendation rules.
+// Separate electricity level and smart-home priority; inactive answers never enter recommendations.
 const priorityPackages={budget:'economy',balance:'comfort',automation:'premium',design:'premium'};
+const priorityLabels={budget:'Экономно',balance:'Оптимально',automation:'Максимум автоматизации',design:'Красивый интерфейс'};
 const shortFunctions={light:'Свет',curtains:'Шторы',climate:'Климат',heating:'Отопление / тёплый пол',leak:'Защита от протечек'};
 const functionSignals={light:'fn_light',curtains:'fn_curtains',climate:'fn_microclimate',heating:'fn_radiator_heat',leak:'fn_leak'};
 let lastResult=null,validationRequested=false;
+// Source: owner-supplied scenario model, 2026.10.11. Not supplier quotations.
+// Reference area: 100 m²; same grid for apartments and houses, confirmed by owner. Levels remain independent.
+const materialsModel = {
+  source: 'Утверждённая матрица чернового этапа, переданная владельцем 2026.10.11',
+  referenceArea: 100,
+  approvedFunctionProfile: true,
+  approvedAreaScaling: true,
+  // Owner explicitly confirmed identical per-m² pricing for houses and apartments.
+  approvedHouseUse: true,
+  electric: {'Эконом': 120000, 'Комфорт': 180000, 'Премиум': 270000},
+  equipment: {
+    aqara: {economy:75000, comfort:145000, premium:260000},
+    wb: {economy:170000, comfort:320000, premium:540000},
+    iridi: {economy:170000, comfort:320000, premium:540000}
+  }
+};
+const packageHints = {
+  'Эконом':'Базовая надёжная электрика без лишнего.',
+  'Комфорт':'Оптимальный уровень для большинства объектов.',
+  'Премиум':'Больше инженерных возможностей и подготовка под сложные сценарии.'
+};
+const systemHints = {
+  aqara:'доступный и понятный старт умного дома.',
+  wb:'основная инженерная система: проводная автоматизация, климат и логика.',
+  iridi:'самостоятельная сценарная система: красивый интерфейс и удобство управления.'
+};
+const automationLabels={economy:'Эконом',comfort:'Комфорт',premium:'Премиум'};
+function automationProfile(data){
+  if(data.need_smart_home!=='smart'||!data.selected_functions.length)return null;
+  if(!materialsModel.approvedFunctionProfile)return null;
+  if(data.selected_functions.some(x=>x==='curtains'||x==='heating'))return 'premium';
+  if(data.selected_functions.includes('climate'))return 'comfort';
+  return 'economy';
+}
+function materialEstimate(data,r,id){
+  const level=automationProfile(data),area=data.area_m2;
+  const scopeAllowed=(data.object_type==='apartment'||materialsModel.approvedHouseUse)
+    && (area===materialsModel.referenceArea||materialsModel.approvedAreaScaling);
+  const electricalBase=materialsModel.electric[r.package];
+  const equipmentBase=id==='none'?0:level?materialsModel.equipment[id]?.[level]:null;
+  const validBase=v=>Number.isFinite(v)&&v>=0;
+  const electricityMaterials=scopeAllowed&&validBase(electricalBase)?area*electricalBase/materialsModel.referenceArea:null;
+  const smartHomeMaterials=scopeAllowed&&validBase(equipmentBase)?area*equipmentBase/materialsModel.referenceArea:null;
+  const complete=electricityMaterials!==null&&smartHomeMaterials!==null;
+  const totalMaterials=complete?Math.ceil((area*(electricalBase+equipmentBase)/materialsModel.referenceArea)/5000)*5000:null;
+  // Compatibility aliases preserve the existing rendering/financial helpers.
+  return {level,electricityMaterials,smartHomeMaterials,totalMaterials,
+    material:electricityMaterials,equipment:smartHomeMaterials,combined:totalMaterials,complete,scopeAllowed};
+}
+function financialOptions(data,r){
+  return priceOptions(data,r).map(p=>{
+    const materials=materialEstimate(data,r,p.id);
+    const fullTotal=materials.complete?p.total+materials.combined:null;
+    if(fullTotal!==null&&!Number.isSafeInteger(fullTotal))throw new RangeError('Financial total exceeds safe integer');
+    return {...p,materials,fullTotal};
+  });
+}
+function financialMessage(p,multiple){
+  const prefix=multiple?' ('+labelMaps.smart_system[p.id]+')':'';
+  const m=p.materials;
+  return ['Работы'+prefix+': от '+number(p.rate)+' ₽/м², от '+number(p.total)+' ₽',
+    'Черновые материалы и базовая автоматика'+prefix+': '+(m.complete?'от '+number(m.combined)+' ₽':'уточним с инженером'),
+    ...(m.level?['Профиль базовой автоматики: '+automationLabels[m.level]+'.']:[]),
+    'Предварительный бюджет стартового этапа'+prefix+': '+(p.fullTotal!==null?'от '+number(p.fullTotal)+' ₽':'пока не рассчитан; материалы требуют уточнения')];
+}
+function financialHTML(p){
+  const m=p.materials;
+  const profile='<p class="why">'+(m.level?'Профиль базовой автоматики УД: '+automationLabels[m.level]+'. ':'')+'В расчёт входят материалы для чернового этапа: кабельная и щитовая часть, базовая автоматика и подготовка трасс. Чистовые устройства, датчики, приводы, панели и финальная комплектация рассчитываются отдельно.</p>';
+  return '<section class="financial-option" aria-label="'+esc(p.label)+'"><h3 class="finance-title">'+esc(p.label)+'</h3>'+
+    '<div class="finance-row"><div class="eyebrow">Работы</div><div class="price-value">от '+number(p.rate)+' ₽/м²</div><p class="why">По объекту от '+number(p.total)+' ₽</p></div>'+
+    '<div class="finance-row"><div class="eyebrow">Черновые материалы и базовая автоматика</div><div class="price-value">'+(m.complete?'от '+number(m.combined)+' ₽':'Уточним с инженером')+'</div>'+profile+
+    (!m.complete?'<p class="why">Полного ориентира материалов для этого варианта пока нет. Стоимость работ показана отдельно.</p>':'')+'</div>'+
+    '<div class="finance-row finance-total"><div class="eyebrow">Предварительный бюджет стартового этапа</div><div class="price-value">'+(p.fullTotal!==null?'от <span class="price-amount">'+number(p.fullTotal)+' ₽</span>':'Пока не рассчитан')+'</div></div></section>';
+}
 function collect(){
-  const smart=radio('need_smart_home')==='smart',priority=radio('main_priority');
+  const smart=radio('need_smart_home')==='smart',priority=smart?radio('main_priority'):'',electricLevel=smart?'':radio('electric_level');
   const selected=smart?[...form.querySelectorAll('[name="functions"]:checked')].map(x=>x.value):[];
-  const data={object_type:radio('object_type'),area_m2:$('area_m2').value===''?null:Number($('area_m2').value),need_smart_home:smart?'smart':'electric',main_priority:priority,selected_functions:selected,
-    electric_package:priorityPackages[priority]||'comfort',priority_focus:smart&&priority?[priority]:[],smart_system:'unknown',need_visual_premium_ui:smart&&priority==='design',
+  const data={object_type:radio('object_type'),area_m2:$('area_m2').value===''?null:Number($('area_m2').value),need_smart_home:smart?'smart':'electric',main_priority:priority,electric_level:electricLevel,selected_functions:selected,
+    electric_package:smart?(priorityPackages[priority]||'comfort'):(electricLevel||'comfort'),priority_focus:smart&&priority?[priority]:[],smart_system:'unknown',need_visual_premium_ui:smart&&priority==='design',
     rooms_count:null,repair_stage:'',city:'',need_electro_project:'unknown',need_scene_switches:false};
   for(const [id] of prepDefs)data[id]='no';
   for(const [id,,count] of fnDefs){data[id]=false;if(count)data[count]=null;}
@@ -306,8 +394,10 @@ function getErrors(data){
   if(!data.object_type)errors.push({selector:'[name="object_type"]',label:'Выберите тип объекта.'});
   const area=$('area_m2');
   if(data.area_m2===null||!Number.isFinite(data.area_m2)||data.area_m2<=0||!area.validity.valid)errors.push({selector:'#area_m2',label:'Укажите положительную площадь с точностью до 0,01 м².'});
-  else if(!Number.isSafeInteger(Math.ceil(data.area_m2*7000)))errors.push({selector:'#area_m2',label:'Проверьте площадь: число слишком велико для расчёта.'});
-  if(!data.main_priority)errors.push({selector:'[name="main_priority"]',label:'Выберите главный приоритет.'});
+  else if(!Number.isSafeInteger(Math.ceil(data.area_m2*(7000+Math.max(0,...Object.values(materialsModel.electric).filter(Number.isFinite))/100+Math.max(...Object.values(materialsModel.equipment).flatMap(x=>Object.values(x)))/100))))errors.push({selector:'#area_m2',label:'Проверьте площадь: число слишком велико для расчёта.'});
+  if(data.need_smart_home==='smart'){
+    if(!data.main_priority)errors.push({selector:'[name="main_priority"]',label:'Выберите главный приоритет.'});
+  }else if(!data.electric_level)errors.push({selector:'[name="electric_level"]',label:'Выберите уровень электрики.'});
   return errors;
 }
 function priceOptions(data,r){
@@ -320,37 +410,41 @@ function summaryText(){
   const {data:d,r,prices}=lastResult;
   return ['Здравствуйте! Я прошёл(а) калькулятор VlasovTech.','',
     'Объект: '+labelMaps.object_type[d.object_type], 'Площадь: '+number(d.area_m2)+' м²',
-    'Что нужно: '+(d.need_smart_home==='smart'?'электрика + умный дом':'только электрика'), 'Пакет: '+r.package,
+    'Что нужно: '+(d.need_smart_home==='smart'?'электрика + умный дом':'только электрика'),
+    (d.need_smart_home==='smart'?'Пакет электрики: ':'Уровень электрики: ')+r.package,
+    ...(d.need_smart_home==='smart'?['Главный приоритет: '+priorityLabels[d.main_priority]]:[]),
     'Система: '+(d.need_smart_home!=='smart'?'не требуется':r.systems.map(x=>labelMaps.smart_system[x]).join(' / ')||'уточним с инженером'),
     'Функции: '+(d.selected_functions.map(x=>shortFunctions[x]).join(', ')|| (d.need_smart_home==='smart'?'уточним с инженером':'не требуются')),
-    ...prices.map(p=>'Ориентир'+(prices.length>1?' ('+labelMaps.smart_system[p.id]+')':'')+': от '+number(p.rate)+' ₽/м², предварительно от '+number(p.total)+' ₽'),
+    ...prices.flatMap(p=>financialMessage(p,prices.length>1)),
     ...(d.need_smart_home==='smart'&&!r.systems.length?['Умный дом пока не включён в ориентир.']:[]),
+    'Чистовые устройства, датчики, приводы, панели и финальная комплектация рассчитываются отдельно.',
     '', 'Хочу обсудить расчёт с инженером.'].join('\n');
 }
 function refresh(){
-  const smart=radio('need_smart_home')==='smart';$('smart-block').hidden=!smart;$('smart-block').disabled=!smart;$('priority-number').textContent=smart?'05':'04';
+  const smart=radio('need_smart_home')==='smart';
+  $('smart-block').hidden=!smart;$('smart-block').disabled=!smart;
+  $('priority-block').hidden=!smart;$('priority-block').disabled=!smart;
+  $('electric-level-block').hidden=smart;$('electric-level-block').disabled=smart;
   const data=collect(),errors=getErrors(data),r=recommend(data);
-  lastResult={data,errors,r,prices:errors.length?[]:priceOptions(data,r)};
+  lastResult={data,errors,r,prices:errors.length?[]:financialOptions(data,r)};
   $('contact-actions').hidden=!!errors.length;
   $('telegram-cta').removeAttribute('href');$('vk-cta').removeAttribute('href');$('message-text').value='';$('manual-copy').hidden=true;$('manual-copy').open=false;$('result-status').textContent='';
   $('area_m2').setAttribute('aria-invalid',String(validationRequested&&errors.some(x=>x.selector==='#area_m2')));
   if(errors.length){
-    $('result-content').innerHTML='<p class="why">Выберите тип объекта, укажите площадь и главный приоритет. Результат появится сразу.</p>'+(validationRequested?'<ul class="errors">'+errors.map(e=>'<li>'+esc(e.label)+'</li>').join('')+'</ul>':'');
+    $('result-content').innerHTML='<p class="why">Выберите тип объекта, укажите площадь и '+(smart?'главный приоритет':'уровень электрики')+'. Результат появится сразу.</p>'+(validationRequested?'<ul class="errors">'+errors.map(e=>'<li>'+esc(e.label)+'</li>').join('')+'</ul>':'');
     return;
   }
   const packageWhy=r.package!==labelMaps.electric_package[data.electric_package]?'Для выбранных функций предлагаем Комфорт; необходимость перехода подтвердит инженер.':'Предварительный уровень по Вашему приоритету.';
   let systemWhy='';
   if(smart){
     if(!r.systems.length)systemWhy='Функции пока не выбраны — обсудим их с инженером. Умный дом в цене пока не учтён.';
-    else if(r.systems.includes('wb'))systemWhy='Wiren Board — инженерная гибкость, интеграции, климат и логика.'+(r.systems.includes('iridi')?' iRidi — самостоятельный вариант для автоматизации, сценариев и интерфейса.':r.systems.includes('aqara')?' Aqara — более доступный вход в базовую автоматизацию.':'');
-    else if(r.systems.includes('iridi'))systemWhy='iRidi — самостоятельная система: автоматизация, сценарии и красивый интерфейс.';
-    else systemWhy='Aqara — доступный вход в автоматизацию для простых задач квартиры.';
+    else systemWhy=r.systems.map(id=>labelMaps.smart_system[id]+' — '+systemHints[id]).join(' ');
   }
-  $('result-content').innerHTML='<div class="result-block"><div class="eyebrow">Пакет электрики</div><div class="recommendation">'+esc(r.package)+'</div><p class="why">'+esc(packageWhy)+'</p></div>'+
-    (smart?'<div class="result-block"><div class="eyebrow">Система</div><div class="recommendation">'+esc(r.systems.map(x=>labelMaps.smart_system[x]).join(' / ')||'Уточним вместе')+'</div><p class="why">'+esc(systemWhy)+'</p>'+(data.selected_functions.length?'<p class="why">Функции: '+esc(data.selected_functions.map(x=>shortFunctions[x]).join(', '))+'.</p>':'')+'</div>':'')+
-    lastResult.prices.map(p=>'<div class="result-block"><div class="eyebrow">'+esc(p.label)+'</div><div class="price-value">от '+number(p.rate)+' ₽/м²</div><p class="price-total">Предварительно от '+number(p.total)+' ₽</p></div>').join('')+
+  $('result-content').innerHTML='<div class="result-block"><div class="eyebrow">'+(smart?'Пакет электрики':'Уровень электрики')+'</div><div class="recommendation">'+esc(r.package)+'</div><p class="why">'+esc(packageHints[r.package]+(r.package!==labelMaps.electric_package[data.electric_package]?' '+packageWhy:''))+'</p></div>'+
+    (smart?'<div class="result-block"><div class="eyebrow">Система</div><div class="recommendation">'+esc(r.systems.map(x=>labelMaps.smart_system[x]).join(' / ')||'Уточним вместе')+'</div><p class="why">Главный приоритет: '+esc(priorityLabels[data.main_priority])+'.</p><p class="why">'+esc(systemWhy)+'</p>'+(data.selected_functions.length?'<p class="why">Функции: '+esc(data.selected_functions.map(x=>shortFunctions[x]).join(', '))+'.</p>':'')+'</div>':'')+
+    lastResult.prices.map(financialHTML).join('')+
     (lastResult.prices.length>1?'<p class="why">Альтернативные варианты — их цены не складываются.</p>':'')+
-    '<p class="why">Ориентир по площади, не точная смета. Состав, оборудование и работы уточним с инженером.</p>';
+    '<p class="why">Это предварительный ориентир стартового этапа. После проекта и уточнения состава система может быть скорректирована — как в меньшую, так и в большую сторону, обычно без существенного отклонения.</p>';
   const message=summaryText();$('message-text').value=message;
   $('telegram-cta').href='https://t.me/'+CONTACTS.telegramUsername+'?text='+encodeURIComponent(message);
   $('vk-cta').href=CONTACTS.vkMessagesUrl;
@@ -371,7 +465,7 @@ async function copyMessage(forVK=false){
   }
 }
 form.addEventListener('input',refresh);
-form.addEventListener('change',e=>{refresh();if(e.target.name==='main_priority'&&!lastResult.errors.length)$('result').scrollIntoView({block:'start'});});
+form.addEventListener('change',e=>{refresh();if(['main_priority','electric_level'].includes(e.target.name)&&!lastResult.errors.length)$('result').scrollIntoView({block:'start'});});
 form.addEventListener('submit',e=>{e.preventDefault();validationRequested=true;refresh();if(lastResult.errors.length)form.querySelector(lastResult.errors[0].selector)?.focus();else{$('result').focus();$('result').scrollIntoView({block:'start'});}});
 form.addEventListener('reset',()=>{validationRequested=false;setTimeout(refresh,0);});
 $('copy-result').addEventListener('click',()=>copyMessage());
