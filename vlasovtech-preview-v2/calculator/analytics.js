@@ -8,6 +8,8 @@
  let enabled=false, visitor=uuid(), queue=[], busy=false, step='object', calcId='', fingerprint='', calcTimer, pendingResult=null, formStarted=false;
  let entry=new URL(location.href);try{if(window.parent!==window&&window.parent.location.origin===location.origin)entry=new URL(window.parent.location.href)}catch{}
  const test=entry.searchParams.get('analytics_test')==='1';
+ function viewport(){try{if(window.parent!==window&&window.frameElement&&window.parent.location.origin===location.origin){const b=window.frameElement.getBoundingClientRect();return {width:window.parent.innerWidth,height:window.parent.innerHeight,top:b.top,left:b.left,frameVisible:b.bottom>0&&b.top<window.parent.innerHeight};}}catch{}return {width:innerWidth,height:innerHeight,top:0,left:0,frameVisible:true};}
+ function isSeen(el){if(!el||el.closest('[hidden]'))return false;const b=el.getBoundingClientRect(),v=viewport();return b.bottom+v.top>0&&b.top+v.top<v.height&&b.right+v.left>0&&b.left+v.left<v.width;}
  const source={};for(const k of ['utm_source','utm_medium','utm_campaign','utm_content','src']){const v=entry.searchParams.get(k);if(v&&/^[a-zA-Z0-9_.-]{1,80}$/.test(v))source[k]=v;}
  try{source.referrer_host=new URL(document.referrer).hostname}catch{}
  function record(event,extra={}){
@@ -23,7 +25,7 @@
  function exit(event){commit();record(event,{calculation_id:calcId||undefined,visible:false});if(!enabled||!queue.length||!ENDPOINT)return;try{navigator.sendBeacon(ENDPOINT,new Blob([JSON.stringify({events:queue.slice(0,40)})],{type:'text/plain'}))}catch{}}
  const seenResults=new Set();
  function view(id){if(!enabled||!id||seenResults.has(id))return;seenResults.add(id);record('result_view',{calculation_id:id,step:'result'});}
- function commit(){if(pendingResult){record('result_generated',pendingResult);const box=document.getElementById('result-title')?.getBoundingClientRect();if(box&&box.bottom>0&&box.top<innerHeight)view(pendingResult.calculation_id);pendingResult=null;clearTimeout(calcTimer);}}
+ function commit(){if(pendingResult){record('result_generated',pendingResult);if(isSeen(document.getElementById('result-content')))view(pendingResult.calculation_id);pendingResult=null;clearTimeout(calcTimer);}}
  function result(data,r,prices){
   if(!enabled)return '';
   const pkg=({'Эконом':'economy','Комфорт':'comfort','Премиум':'premium'})[r.package];
@@ -35,13 +37,14 @@
   if(enabled||!ENDPOINT)return;enabled=true;
   try{const old=JSON.parse(safeGet(VISITOR)||'null');if(old&&/^[a-f0-9-]{36}$/.test(old.id)&&Date.now()-old.at<90*86400000)visitor=old.id}catch{}
   safeSet(VISITOR,JSON.stringify({id:visitor,at:Date.now()}));
-  record('visit_start',{source,embedded:window.parent!==window,device:matchMedia('(pointer:coarse)').matches?'touch':'desktop',viewport:[innerWidth,innerHeight]});
-  record('step_view',{step});if(typeof collect==='function'&&collect().object_type){record('form_start');formStarted=true;}if(typeof refresh==='function')refresh();flush();
+  record('visit_start',{source,embedded:window.parent!==window,device:matchMedia('(pointer:coarse)').matches?'touch':'desktop',viewport:[viewport().width,viewport().height]});
+  if(isSeen(document.getElementById('object-title')))record('step_view',{step:'object'});if(typeof collect==='function'&&collect().object_type){record('form_start');formStarted=true;}if(typeof refresh==='function')refresh();flush();
  }
  function choice(value){safeSet(KEY,JSON.stringify({value,at:Date.now()}));document.getElementById('analytics-notice').hidden=true;if(value==='yes')start();else{enabled=false;queue=[];calcId='';fingerprint='';pendingResult=null;clearTimeout(calcTimer);try{localStorage.removeItem(VISITOR)}catch{}if(typeof refresh==='function')refresh();}}
  function notice(){document.getElementById('analytics-notice').hidden=false;}
  window.VlasovTechAnalytics={record,result,flush,commit,get calculationId(){return calcId},get enabled(){return enabled},version:VERSION};
  document.addEventListener('DOMContentLoaded',()=>{
+  if(window.parent!==window){const n=document.getElementById('analytics-notice');document.querySelector('main').before(n);n.style.position='static';}
   document.getElementById('analytics-accept').addEventListener('click',()=>choice('yes'));
   document.getElementById('analytics-decline').addEventListener('click',()=>choice('no'));
   document.getElementById('analytics-settings').addEventListener('click',notice);
@@ -52,8 +55,11 @@
   form.addEventListener('submit',()=>{if(typeof lastResult!=='undefined'&&lastResult?.errors?.length)lastResult.errors.forEach(e=>record('validation_error',{field:e.selector==='#area_m2'?'area_m2':e.selector.match(/name="([^"]+)/)?.[1]}));});
   form.addEventListener('reset',()=>{commit();record('reset');fingerprint='';calcId='';formStarted=false;});
   const sections={'object-title':'object','area-title':'area','need-title':'need','smart-title':'functions','electric-level-title':'electric_level','priority-title':'priority','result-title':'result'};
-  const seen=new Set();const io=new IntersectionObserver(entries=>{for(const e of entries){if(!e.isIntersecting||e.target.closest('[hidden]'))continue;step=sections[e.target.id];if(!enabled||seen.has(step))continue;seen.add(step);record('step_view',{step});if(step==='result'&&document.getElementById('contact-actions')?.hidden===false){commit();view(calcId);}}},{threshold:0.7});
+  const seen=new Set();const io=new IntersectionObserver(entries=>{for(const e of entries){if(!e.isIntersecting||!isSeen(e.target))continue;step=sections[e.target.id];if(!enabled||seen.has(step))continue;seen.add(step);record('step_view',{step});if(step==='result'&&document.getElementById('contact-actions')?.hidden===false){commit();view(calcId);}}},{threshold:0.7});
   for(const id of Object.keys(sections)){const el=document.getElementById(id);if(el)io.observe(el)}
+  function visibleSteps(){if(!enabled)return;for(const id of Object.keys(sections)){const el=document.getElementById(id),name=sections[id];if(!isSeen(el))continue;step=name;if(!seen.has(name)){seen.add(name);record('step_view',{step:name});}}if(isSeen(document.getElementById('result-content'))&&document.getElementById('contact-actions')?.hidden===false){commit();view(calcId);}}
+  addEventListener('scroll',visibleSteps,{passive:true});try{if(window.parent!==window&&window.parent.location.origin===location.origin)window.parent.addEventListener('scroll',visibleSteps,{passive:true});}catch{}
+  setInterval(visibleSteps,1000);
   const dialog=document.getElementById('area-confirmation');new MutationObserver(()=>{if(dialog.open)record('area_review',{step:'area'});}).observe(dialog,{attributes:true,attributeFilter:['open']});
   document.addEventListener('click',e=>{const el=e.target.closest('a,button,summary');if(!el)return;const channel=({'telegram-cta':'telegram','vk-cta':'vk','max-cta':'max','email-cta':'email'})[el.id];if(channel&&el.hasAttribute('href')&&!el.closest('[hidden]')){commit();view(calcId);record('contact_click',{channel,calculation_id:calcId});flush();}else if(el.id==='copy-result'){commit();view(calcId);record('copy_click',{calculation_id:calcId});}else if(el.id==='confirm-area')record('area_confirm',{step:'area'});else if(el.id==='edit-area')record('area_edit',{step:'area'});else if(el.type==='submit')record('ui_click',{ui:'submit'});});
   const status=document.getElementById('result-status');new MutationObserver(()=>{if(status.textContent.startsWith('Текст скопирован'))record('copy_success',{calculation_id:calcId});else if(status.textContent.startsWith('Автокопирование недоступно'))record('copy_fallback',{calculation_id:calcId});}).observe(status,{childList:true,subtree:true,characterData:true});
@@ -61,5 +67,5 @@
  let scroll=0;addEventListener('scroll',()=>{const max=document.documentElement.scrollHeight-innerHeight;const value=max>0?Math.min(100,Math.floor(scrollY/max*4)*25):100;if(value>scroll){scroll=value;record('scroll',{scroll_percent:value});}},{passive:true});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)exit('visibility');else{record('visibility',{visible:true});flush();}});
  addEventListener('pagehide',()=>exit('page_exit'));
- setInterval(flush,5000);setInterval(()=>{if(!document.hidden){record('heartbeat',{calculation_id:calcId||undefined,visible:true});flush();}},30000);
+ setInterval(flush,5000);setInterval(()=>{if(!document.hidden&&viewport().frameVisible){record('heartbeat',{calculation_id:calcId||undefined,visible:true});flush();}},30000);
 })();
