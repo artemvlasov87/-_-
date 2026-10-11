@@ -6,8 +6,8 @@
  const uuid=()=>crypto.randomUUID(), started=performance.now(), session=uuid();
  const safeGet=k=>{try{return localStorage.getItem(k)}catch{return null}},safeSet=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
  let enabled=false, visitor=uuid(), queue=[], busy=false, step='object', calcId='', fingerprint='', calcTimer, pendingResult=null, formStarted=false;
- const test=new URL(location.href).searchParams.get('analytics_test')==='1';
  let entry=new URL(location.href);try{if(window.parent!==window&&window.parent.location.origin===location.origin)entry=new URL(window.parent.location.href)}catch{}
+ const test=entry.searchParams.get('analytics_test')==='1';
  const source={};for(const k of ['utm_source','utm_medium','utm_campaign','utm_content','src']){const v=entry.searchParams.get(k);if(v&&/^[a-zA-Z0-9_.-]{1,80}$/.test(v))source[k]=v;}
  try{source.referrer_host=new URL(document.referrer).hostname}catch{}
  function record(event,extra={}){
