@@ -110,12 +110,14 @@
   </div>
   <footer class="foot">VlasovTech · Ориентир стартового этапа не является точной сметой. Состав и стоимость уточним по плану объекта. <a href="tel:+79100071727">+7 (910) 007-17-27</a></footer>
 </main>
+<section id="analytics-notice" aria-label="Настройка аналитики" style="position:sticky;bottom:0;z-index:20;background:#fff;border:1px solid #ddd;padding:12px;max-width:1100px;margin:auto;border-radius:12px"><p style="margin:0 0 8px">Разрешить аналитику? VlasovTech сохранит источник перехода, выбор в калькуляторе, расчёты и нажатия со случайным идентификатором браузера. Контакты и текст переписки не собираются. Отказ не мешает расчёту. <a href="analytics-privacy.html" target="_blank" rel="noopener">Подробнее</a></p><button type="button" id="analytics-accept" class="primary">Разрешить</button> <button type="button" id="analytics-decline" class="secondary">Без аналитики</button></section><p style="text-align:center"><button type="button" id="analytics-settings" class="secondary">Настройка аналитики</button></p>
 <dialog id="area-confirmation" aria-labelledby="area-confirmation-title" aria-describedby="area-confirmation-text">
   <h2 id="area-confirmation-title">Проверьте площадь</h2>
   <p id="area-confirmation-text"></p>
   <div class="actions"><button type="button" id="edit-area" class="secondary" autofocus>Исправить площадь</button><button type="button" id="confirm-area" class="primary">Да, площадь указана верно</button></div>
 </dialog>
-<script src="../analytics.js?v=improvements-20261011"></script>
+<script src="analytics-config.js?v=analytics-20261012"></script>
+<script src="analytics.js?v=analytics-20261012"></script>
 <script>
 
 'use strict';
@@ -440,7 +442,7 @@ function summaryText(){
     ...(d.need_smart_home==='smart'&&!r.systems.length?['Умный дом пока не включён в ориентир.']:[]),
     'Чистовые устройства, датчики, приводы, панели, интерфейсы и финальная комплектация рассчитываются отдельно.',
     'Точная смета появляется после получения исходных данных и проверки проекта.',
-    '', 'Хочу обсудить расчёт с инженером.'].join('\n');
+    '', 'Хочу обсудить расчёт с инженером.'].join('\n')+(window.VlasovTechAnalytics?.calculationId?'\nНомер расчёта: '+window.VlasovTechAnalytics.calculationId:'');
 }
 function areaKey(data){return data.object_type+':'+data.area_m2;}
 function needsAreaConfirmation(data){
@@ -513,6 +515,7 @@ function refresh(){
     (lastResult.prices.length>1?'<p class="why">Альтернативные варианты — их цены не складываются.</p>':'')+
     '<p class="why">Это предварительный ориентир стартового этапа. После проекта и уточнения состава система может быть скорректирована — как в меньшую, так и в большую сторону, обычно без существенного отклонения.</p>';
   syncScopeDetails();
+  window.VlasovTechAnalytics?.result(data,r,lastResult.prices);
   const message=summaryText();$('message-text').value=message;
   const links=contactLinks(message);
   $('telegram-cta').href=links.telegram;$('vk-cta').href=links.vk;

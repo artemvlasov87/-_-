@@ -40,6 +40,12 @@
     .finance-total{border-left:3px solid var(--orange);padding-left:12px;margin-top:16px}
     .result .finance-total .price-value{font-size:1.25rem;font-weight:700}
     .price-amount{white-space:nowrap}
+    /* Only the area confirmation and the two additional contact buttons. */
+    .area-check{margin-top:12px;color:#743607;font-size:.875rem}.area-check button{margin-top:8px}
+    #area-confirmation{width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;border:1px solid var(--line);border-radius:12px;padding:24px;background:white;color:var(--ink)}
+    #area-confirmation::backdrop{background:#1e242ab3}#area-confirmation h2{margin-bottom:12px}#area-confirmation p{margin-bottom:18px}#area-confirmation .actions{display:grid;gap:10px}#area-confirmation button{width:100%;min-height:48px;white-space:normal}
+    .result .max-button{background:#e4ddff;color:#292044}.result .email-button{background:#f1f2f0;color:#232a31}
+    @media(max-width:430px){#area-confirmation{padding:20px}}
   </style>
 </head>
 <body>
@@ -54,7 +60,8 @@
         <fieldset><legend class="skip">Тип объекта</legend><div class="choices two"><label class="choice"><input type="radio" name="object_type" value="apartment" required><span>Квартира</span></label><label class="choice"><input type="radio" name="object_type" value="house" required><span>Дом</span></label></div></fieldset>
       </section>
       <section class="section" aria-labelledby="area-title"><div class="section-head"><span class="num" aria-hidden="true">02</span><h2 id="area-title">Площадь</h2></div>
-        <div class="field"><label for="area_m2">Площадь, м²</label><input id="area_m2" name="area_m2" type="number" min="0.01" step="0.01" placeholder="Например, 80" required inputmode="decimal"></div>
+        <div class="field"><label for="area_m2">Площадь, м²</label><input id="area_m2" name="area_m2" type="number" min="0.01" step="0.01" placeholder="Например, 80" required inputmode="decimal" aria-describedby="area-check-text"></div>
+        <div id="area-check" class="area-check" hidden><p id="area-check-text"></p><button type="button" id="review-area" class="secondary">Проверить площадь</button></div>
       </section>
       <section class="section" aria-labelledby="need-title"><div class="section-head"><span class="num" aria-hidden="true">03</span><h2 id="need-title">Что нужно?</h2></div>
         <fieldset><legend class="skip">Что нужно?</legend><div class="choices two"><label class="choice"><input type="radio" name="need_smart_home" value="electric" checked><span>Только электрика</span></label><label class="choice"><input type="radio" name="need_smart_home" value="smart"><span>Электрика + умный дом</span></label></div></fieldset>
@@ -90,7 +97,9 @@
       <div id="contact-actions" hidden>
         <a id="telegram-cta" class="primary messenger" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
         <a id="vk-cta" class="primary messenger vk-button" target="_blank" rel="noopener noreferrer">Написать в ВК</a>
-        <p class="why">Telegram откроется с готовым текстом. Для VK текст скопируется — вставьте его в диалог.</p>
+        <a id="max-cta" class="primary messenger max-button" target="_blank" rel="noopener noreferrer" hidden>Написать в MAX</a>
+        <a id="email-cta" class="primary messenger email-button">Отправить по почте</a>
+        <p id="contact-help" class="why"></p>
         <button type="button" id="copy-result" class="secondary">Скопировать текст</button>
         <p id="result-status" class="status" role="status"></p>
         <details id="manual-copy" class="manual-copy" hidden><summary>Готовый текст сообщения</summary><textarea id="message-text" readonly aria-label="Готовый текст сообщения"></textarea></details>
@@ -99,10 +108,21 @@
   </div>
   <footer class="foot">VlasovTech · Ориентир стартового этапа не является точной сметой. Состав и стоимость уточним по плану объекта. <a href="tel:+79100071727">+7 (910) 007-17-27</a></footer>
 </main>
+<section id="analytics-notice" aria-label="Настройка аналитики" style="position:sticky;bottom:0;z-index:20;background:#fff;border:1px solid #ddd;padding:12px;max-width:1100px;margin:auto;border-radius:12px"><p style="margin:0 0 8px">Разрешить аналитику? VlasovTech сохранит источник перехода, выбор в калькуляторе, расчёты и нажатия со случайным идентификатором браузера. Контакты и текст переписки не собираются. Отказ не мешает расчёту. <a href="analytics-privacy.html" target="_blank" rel="noopener">Подробнее</a></p><button type="button" id="analytics-accept" class="primary">Разрешить</button> <button type="button" id="analytics-decline" class="secondary">Без аналитики</button></section><p style="text-align:center"><button type="button" id="analytics-settings" class="secondary">Настройка аналитики</button></p>
+<dialog id="area-confirmation" aria-labelledby="area-confirmation-title" aria-describedby="area-confirmation-text">
+  <h2 id="area-confirmation-title">Проверьте площадь</h2>
+  <p id="area-confirmation-text"></p>
+  <div class="actions"><button type="button" id="edit-area" class="secondary" autofocus>Исправить площадь</button><button type="button" id="confirm-area" class="primary">Да, площадь указана верно</button></div>
+</dialog>
+<script src="analytics-config.js?v=analytics-20261012-1"></script>
+<script src="analytics.js?v=analytics-20261012-1"></script>
 <script>
 
 'use strict';
-const CONTACTS = Object.freeze({telegramUsername:'vlasovtech_pro',vkMessagesUrl:'https://vk.me/vlasovtech'});
+const CONTACTS = Object.freeze({"telegramUsername":"vlasovtech_pro","vkMessagesUrl":"https://vk.me/vlasovtech","email":"Vlasovtechpro@gmail.com","maxMessagesUrl":"https://max.ru/u/f9LHodD0cOKVISuqpQSehYwWSHqbVJo5Z-HKthRCmAxBntgb12A3j0TnOP8"});
+// Soft UX thresholds only: not engineering limits or pricing coefficients.
+const AREA_REVIEW_LIMITS=Object.freeze({apartment:300,house:800});
+let confirmedAreaKey='',pendingAreaKey='',continueAfterAreaConfirmation=false;
 const form=document.getElementById('configuration');
 const $=id=>document.getElementById(id);
 function esc(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -406,7 +426,7 @@ function priceOptions(data,r){
 }
 function number(value){return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(value).replace(/ /g,' ');}
 function summaryText(){
-  if(!lastResult||lastResult.errors.length)return '';
+  if(!lastResult||lastResult.errors.length||lastResult.needsAreaConfirmation)return '';
   const {data:d,r,prices}=lastResult;
   return ['Здравствуйте! Я прошёл(а) калькулятор VlasovTech.','',
     'Объект: '+labelMaps.object_type[d.object_type], 'Площадь: '+number(d.area_m2)+' м²',
@@ -418,7 +438,46 @@ function summaryText(){
     ...prices.flatMap(p=>financialMessage(p,prices.length>1)),
     ...(d.need_smart_home==='smart'&&!r.systems.length?['Умный дом пока не включён в ориентир.']:[]),
     'Чистовые устройства, датчики, приводы, панели и финальная комплектация рассчитываются отдельно.',
-    '', 'Хочу обсудить расчёт с инженером.'].join('\n');
+    '', 'Хочу обсудить расчёт с инженером.'].join('\n')+(window.VlasovTechAnalytics?.calculationId?'\nНомер расчёта: '+window.VlasovTechAnalytics.calculationId:'');
+}
+function areaKey(data){return data.object_type+':'+data.area_m2;}
+function needsAreaConfirmation(data){
+  return Number.isFinite(data.area_m2)&&data.area_m2>AREA_REVIEW_LIMITS[data.object_type]&&confirmedAreaKey!==areaKey(data);
+}
+function contactLinks(message){
+  return {
+    telegram:'https://t.me/'+CONTACTS.telegramUsername+'?text='+encodeURIComponent(message),
+    vk:CONTACTS.vkMessagesUrl,
+    max:CONTACTS.maxMessagesUrl,
+    email:'mailto:'+CONTACTS.email+'?subject='+encodeURIComponent('Расчёт VlasovTech — обсуждение с инженером')+'&body='+encodeURIComponent(message.replace(/\r?\n/g,'\r\n'))
+  };
+}
+function focusResult(){ $('result').focus();$('result').scrollIntoView({block:'start'}); }
+function dismissAreaConfirmation(){
+  pendingAreaKey='';continueAfterAreaConfirmation=false;
+  if($('area-confirmation').open)$('area-confirmation').close();
+  $('area_m2').focus();$('area_m2').select();
+}
+function acceptAreaConfirmation(){
+  const data=collect(),matches=pendingAreaKey===areaKey(data);
+  const continueToResult=continueAfterAreaConfirmation;
+  pendingAreaKey='';continueAfterAreaConfirmation=false;
+  if($('area-confirmation').open)$('area-confirmation').close();
+  if(matches)confirmedAreaKey=areaKey(data);
+  refresh();
+  if(continueToResult&&!lastResult.errors.length&&!lastResult.needsAreaConfirmation)focusResult();
+}
+function requestAreaConfirmation(continueToResult=false){
+  const data=collect();
+  if(getErrors(data).some(e=>['#area_m2','[name="object_type"]'].includes(e.selector))||!needsAreaConfirmation(data))return false;
+  pendingAreaKey=areaKey(data);continueAfterAreaConfirmation=continueAfterAreaConfirmation||continueToResult;
+  const object=data.object_type==='apartment'?'квартиры':'дома';
+  const prompt='Вы указали площадь '+object+' '+number(data.area_m2)+' м². Вы уверены, что площадь указана правильно? Возможно, случайно добавился лишний ноль.';
+  $('area-confirmation-text').textContent=prompt;$('confirm-area').textContent='Да, '+number(data.area_m2)+' м² — верно';
+  const dialog=$('area-confirmation');
+  if(typeof dialog.showModal==='function'){if(!dialog.open)dialog.showModal();}
+  else if(window.confirm(prompt))acceptAreaConfirmation();else dismissAreaConfirmation();
+  return true;
 }
 function refresh(){
   const smart=radio('need_smart_home')==='smart';
@@ -426,14 +485,19 @@ function refresh(){
   $('priority-block').hidden=!smart;$('priority-block').disabled=!smart;
   $('electric-level-block').hidden=smart;$('electric-level-block').disabled=smart;
   const data=collect(),errors=getErrors(data),r=recommend(data);
-  lastResult={data,errors,r,prices:errors.length?[]:financialOptions(data,r)};
-  $('contact-actions').hidden=!!errors.length;
-  $('telegram-cta').removeAttribute('href');$('vk-cta').removeAttribute('href');$('message-text').value='';$('manual-copy').hidden=true;$('manual-copy').open=false;$('result-status').textContent='';
+  if(confirmedAreaKey&&confirmedAreaKey!==areaKey(data))confirmedAreaKey='';
+  const needsReview=!errors.some(e=>['#area_m2','[name="object_type"]'].includes(e.selector))&&needsAreaConfirmation(data);
+  lastResult={data,errors,r,needsAreaConfirmation:needsReview,prices:errors.length||needsReview?[]:financialOptions(data,r)};
+  $('area-check').hidden=!needsReview;
+  $('area-check-text').textContent=needsReview?'Площадь '+number(data.area_m2)+' м² требует подтверждения. Проверьте, не добавился ли лишний ноль.':'';
+  $('contact-actions').hidden=!!errors.length||needsReview;
+  for(const id of ['telegram-cta','vk-cta','max-cta','email-cta'])$(id).removeAttribute('href');$('max-cta').hidden=!CONTACTS.maxMessagesUrl;$('message-text').value='';$('manual-copy').hidden=true;$('manual-copy').open=false;$('result-status').textContent='';
   $('area_m2').setAttribute('aria-invalid',String(validationRequested&&errors.some(x=>x.selector==='#area_m2')));
   if(errors.length){
     $('result-content').innerHTML='<p class="why">Выберите тип объекта, укажите площадь и '+(smart?'главный приоритет':'уровень электрики')+'. Результат появится сразу.</p>'+(validationRequested?'<ul class="errors">'+errors.map(e=>'<li>'+esc(e.label)+'</li>').join('')+'</ul>':'');
     return;
   }
+  if(needsReview){$('result-content').innerHTML='<p class="why">Подтвердите площадь '+number(data.area_m2)+' м² или исправьте её. Затем покажем предварительный результат.</p>';return;}
   const packageWhy=r.package!==labelMaps.electric_package[data.electric_package]?'Для выбранных функций предлагаем Комфорт; необходимость перехода подтвердит инженер.':'Предварительный уровень по Вашему приоритету.';
   let systemWhy='';
   if(smart){
@@ -445,32 +509,43 @@ function refresh(){
     lastResult.prices.map(financialHTML).join('')+
     (lastResult.prices.length>1?'<p class="why">Альтернативные варианты — их цены не складываются.</p>':'')+
     '<p class="why">Это предварительный ориентир стартового этапа. После проекта и уточнения состава система может быть скорректирована — как в меньшую, так и в большую сторону, обычно без существенного отклонения.</p>';
+  window.VlasovTechAnalytics?.result(data,r,lastResult.prices);
   const message=summaryText();$('message-text').value=message;
-  $('telegram-cta').href='https://t.me/'+CONTACTS.telegramUsername+'?text='+encodeURIComponent(message);
-  $('vk-cta').href=CONTACTS.vkMessagesUrl;
+  const links=contactLinks(message);
+  $('telegram-cta').href=links.telegram;$('vk-cta').href=links.vk;
+  if(links.max)$('max-cta').href=links.max;
+  $('email-cta').href=links.email;
+  $('contact-help').textContent='Telegram откроется с готовым текстом. '+(links.max?'Для ВК и MAX текст скопируется — вставьте его в диалог. ':'Для ВК текст скопируется — вставьте его в диалог. ')+'Почта откроет готовое письмо; отправку подтвердите самостоятельно.';
 }
-async function copyMessage(forVK=false){
+async function copyMessage(destination=''){
+  const channel=destination===true?'ВК':destination;
   const message=summaryText();if(!message)return;
   try{
     if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');
     await navigator.clipboard.writeText(message);
     if(summaryText()!==message)return;
-    $('result-status').textContent=forVK?'Текст скопирован. Вставьте его в диалог VK и отправьте.':'Текст скопирован.';
+    $('result-status').textContent=channel?'Текст скопирован. Вставьте его в диалог '+channel+' и отправьте.':'Текст скопирован.';
   }catch{
     if(summaryText()!==message)return;
     // Kept on this screen, including file/offline contexts and denied permissions.
     $('manual-copy').hidden=false;$('manual-copy').open=true;$('message-text').value=message;
-    $('result-status').textContent='Автокопирование недоступно. Выделите готовый текст ниже и скопируйте его'+(forVK?' для диалога VK.':'.');
-    if(!forVK){$('message-text').focus();$('message-text').select();}
+    $('result-status').textContent='Автокопирование недоступно. Выделите готовый текст ниже и скопируйте его'+(channel?' для диалога '+channel+'.':'.');
+    if(!channel){$('message-text').focus();$('message-text').select();}
   }
 }
 form.addEventListener('input',refresh);
-form.addEventListener('change',e=>{refresh();if(['main_priority','electric_level'].includes(e.target.name)&&!lastResult.errors.length)$('result').scrollIntoView({block:'start'});});
-form.addEventListener('submit',e=>{e.preventDefault();validationRequested=true;refresh();if(lastResult.errors.length)form.querySelector(lastResult.errors[0].selector)?.focus();else{$('result').focus();$('result').scrollIntoView({block:'start'});}});
-form.addEventListener('reset',()=>{validationRequested=false;setTimeout(refresh,0);});
+$('area_m2').addEventListener('blur',()=>requestAreaConfirmation());
+$('review-area').addEventListener('click',()=>requestAreaConfirmation());
+$('confirm-area').addEventListener('click',acceptAreaConfirmation);
+$('edit-area').addEventListener('click',dismissAreaConfirmation);
+$('area-confirmation').addEventListener('cancel',e=>{e.preventDefault();dismissAreaConfirmation();});
+form.addEventListener('change',e=>{refresh();if(['main_priority','electric_level'].includes(e.target.name)&&!lastResult.errors.length){if(!requestAreaConfirmation())$('result').scrollIntoView({block:'start'});}});
+form.addEventListener('submit',e=>{e.preventDefault();validationRequested=true;refresh();if(lastResult.errors.length)form.querySelector(lastResult.errors[0].selector)?.focus();else if(!requestAreaConfirmation(true))focusResult();});
+form.addEventListener('reset',()=>{validationRequested=false;confirmedAreaKey='';pendingAreaKey='';continueAfterAreaConfirmation=false;if($('area-confirmation').open)$('area-confirmation').close();setTimeout(refresh,0);});
 $('copy-result').addEventListener('click',()=>copyMessage());
 // The native anchor opens synchronously; clipboard starts in the same user gesture.
-$('vk-cta').addEventListener('click',()=>{void copyMessage(true);});
+$('vk-cta').addEventListener('click',()=>{void copyMessage('ВК');});
+$('max-cta').addEventListener('click',e=>{if(!CONTACTS.maxMessagesUrl){e.preventDefault();return;}void copyMessage('MAX');});
 refresh();
 
 </script>
