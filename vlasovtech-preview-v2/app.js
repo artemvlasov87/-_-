@@ -21,7 +21,19 @@ form?.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity()
 document.querySelector('#copy-message')?.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(output.value);status.textContent='Текст скопирован. Вставьте его в переписку и отправьте.';}catch{output.focus();output.select();status.textContent='Браузер не разрешил копирование. Выделите текст и скопируйте вручную.';}});
 form?.addEventListener('input',()=>{if(result&&!result.hidden){result.hidden=true;output.value='';status.textContent='';document.getElementById('telegram-message').href='https://t.me/vlasovtech_pro';}});
 const frame=document.querySelector('.calculator-frame');
-frame?.addEventListener('load',()=>{try{const doc=frame.contentDocument;const resize=()=>{frame.style.height=(Math.max(doc.documentElement.scrollHeight,doc.body.scrollHeight)+24)+'px';};resize();new ResizeObserver(resize).observe(doc.body);}catch{/* file:// может запретить доступ к iframe; остаётся стандартная прокрутка. */}});
+// Iframe may finish loading before a deferred parent script runs.
+let observedCalculatorBody=null,calculatorObserver=null;
+function syncCalculatorFrame(){
+ try{const doc=frame?.contentDocument;if(!doc?.body||doc.URL==='about:blank')return;
+  const resize=()=>{const height=Math.ceil(doc.body.getBoundingClientRect().height)+24;if(Number.isFinite(height)&&height>24&&frame.style.height!==height+'px')frame.style.height=height+'px';};
+  resize();
+  if(observedCalculatorBody!==doc.body){calculatorObserver?.disconnect();observedCalculatorBody=doc.body;calculatorObserver=new ResizeObserver(resize);calculatorObserver.observe(doc.body);doc.fonts?.ready.then(resize);}
+ }catch{/* Standalone file browsers can deny access; fullscreen link remains available. */}
+}
+frame?.addEventListener('load',syncCalculatorFrame);
+syncCalculatorFrame();
+addEventListener('load',syncCalculatorFrame,{once:true});
+
 
 // Пояснения раскрыты на компьютере и свернуты на телефоне; текст не удаляется.
 const compactNotes=()=>matchMedia('(max-width:650px),(pointer:coarse)').matches || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
