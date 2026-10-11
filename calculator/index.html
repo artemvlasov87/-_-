@@ -25,55 +25,75 @@
     #result .system-option{margin:18px 0;padding:15px;border:1px solid #53606a;border-radius:6px;background:#273039}#result .system-option h3{font-size:1.1rem;line-height:1.35;color:#fff}
     #result .copy-details{margin-top:14px;border-top:1px solid #4a555e;padding-top:12px}#result .copy-details summary{font-size:.875rem;font-weight:600;cursor:pointer;line-height:1.5;color:#ffcfad;padding:3px 0}
     #result .copy-details ul,#result .result-block ul{font-size:.875rem;line-height:1.55;color:#e0e5e9}#result .result-cta{margin-top:15px;color:#eef1f3}#result .system-option li{overflow-wrap:anywhere}
+  
+    /* Compact client path: inherited branding, fonts and responsive rules. */
+    .section{padding:20px}.section-head{margin-bottom:14px}.choice small{display:block;margin-top:4px}
+    .messenger{text-decoration:none;min-height:48px;display:block}.result .vk-button{background:#e8eef6;color:#182334}
+    #result-status{margin-top:12px;min-height:1.5em}.manual-copy{margin-top:12px}.manual-copy summary{cursor:pointer}
+    #message-text{width:100%;min-height:215px;margin-top:10px;padding:10px;font-size:.875rem;resize:vertical;border-radius:5px}
+    .result .price-value{font-size:1.15rem}.result .price-total{margin-top:6px;font-weight:600}.result p{overflow-wrap:anywhere}
+    .form-bottom .secondary{text-decoration:none;text-align:center}.result [aria-disabled=true]{opacity:.45;pointer-events:none}
+    @media(max-width:430px){.check-grid,.choices.two{grid-template-columns:1fr}.section{padding:16px}.result{padding:20px}}
   </style>
 </head>
 <body>
 <a class="skip" href="#configuration">Перейти к параметрам</a>
 <header><div class="top"><div class="brand"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMTk2IiB2aWV3Qm94PSIwIDAgMjAwIDE5NiIgZmlsbD0ibm9uZSI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxOTYiIGZpbGw9IiMxRTI0MkEiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMCAyMCkiPjxwYXRoIGQ9Ik0wLjAwIDQwLjAwTDgwLjAwIDAuMDBMMTYwLjAwIDQwLjAwTDE2MC4wMCA1NC4wMEw4MC4wMCAxNC4wMEwwLjAwIDU0LjAwWiIgZmlsbD0iI0YyRjJGMCIvPjxwYXRoIGQ9Ik0yNi4wMCA1MC4wMEw4MC4wMCAxNTYuMDBMMTM0LjAwIDUwLjAwTDEwNC4wMCA1MC4wMEw4MC4wMCA5Ny4xMEw1Ni4wMCA1MC4wMFoiIGZpbGw9IiNGMkYyRjAiLz48cGF0aCBkPSJNNzkuMDAgODYuMDBMOTUuMDAgODYuMDBMNzEuMDAgMTI4LjAwTDc4LjAwIDk4LjAwTDYyLjAwIDk4LjAwTDg4LjAwIDQ4LjAwWiBNODkuOTUgNDkuMDFMNjMuOTUgOTkuMDFMNjIuMDAgOTguMDBMODguMDAgNDguMDBaIE04OC4wMCA0OC4wMEw2Mi4wMCA5OC4wMEw2MC4wNSA5Ni45OUw4Ni4wNSA0Ni45OVogTTYyLjAwIDk1LjgwTDc4LjAwIDk1LjgwTDc4LjAwIDk4LjAwTDYyLjAwIDk4LjAwWiBNNjIuMDAgOTguMDBMNzguMDAgOTguMDBMNzguMDAgMTAwLjIwTDYyLjAwIDEwMC4yMFogTTgwLjE0IDk4LjUwTDczLjE0IDEyOC41MEw3MS4wMCAxMjguMDBMNzguMDAgOTguMDBaIE03OC4wMCA5OC4wMEw3MS4wMCAxMjguMDBMNjguODYgMTI3LjUwTDc1Ljg2IDk3LjUwWiBNNjkuMDkgMTI2LjkxTDkzLjA5IDg0LjkxTDk1LjAwIDg2LjAwTDcxLjAwIDEyOC4wMFogTTcxLjAwIDEyOC4wMEw5NS4wMCA4Ni4wMEw5Ni45MSA4Ny4wOUw3Mi45MSAxMjkuMDlaIE05NS4wMCA4OC4yMEw3OS4wMCA4OC4yMEw3OS4wMCA4Ni4wMEw5NS4wMCA4Ni4wMFogTTk1LjAwIDg2LjAwTDc5LjAwIDg2LjAwTDc5LjAwIDgzLjgwTDk1LjAwIDgzLjgwWiBNNzYuODYgODUuNDlMODUuODYgNDcuNDlMODguMDAgNDguMDBMNzkuMDAgODYuMDBaIE03OS4wMCA4Ni4wMEw4OC4wMCA0OC4wMEw5MC4xNCA0OC41MUw4MS4xNCA4Ni41MVogTTkwLjIwIDQ4LjAwTDkwLjEzIDQ4LjU3TDg5LjkxIDQ5LjEwTDg5LjU2IDQ5LjU2TDg5LjEwIDQ5LjkxTDg4LjU3IDUwLjEzTDg4LjAwIDUwLjIwTDg3LjQzIDUwLjEzTDg2LjkwIDQ5LjkxTDg2LjQ0IDQ5LjU2TDg2LjA5IDQ5LjEwTDg1Ljg3IDQ4LjU3TDg1LjgwIDQ4LjAwTDg1Ljg3IDQ3LjQzTDg2LjA5IDQ2LjkwTDg2LjQ0IDQ2LjQ0TDg2LjkwIDQ2LjA5TDg3LjQzIDQ1Ljg3TDg4LjAwIDQ1LjgwTDg4LjU3IDQ1Ljg3TDg5LjEwIDQ2LjA5TDg5LjU2IDQ2LjQ0TDg5LjkxIDQ2LjkwTDkwLjEzIDQ3LjQzWiBNNjQuMjAgOTguMDBMNjQuMTMgOTguNTdMNjMuOTEgOTkuMTBMNjMuNTYgOTkuNTZMNjMuMTAgOTkuOTFMNjIuNTcgMTAwLjEzTDYyLjAwIDEwMC4yMEw2MS40MyAxMDAuMTNMNjAuOTAgOTkuOTFMNjAuNDQgOTkuNTZMNjAuMDkgOTkuMTBMNTkuODcgOTguNTdMNTkuODAgOTguMDBMNTkuODcgOTcuNDNMNjAuMDkgOTYuOTBMNjAuNDQgOTYuNDRMNjAuOTAgOTYuMDlMNjEuNDMgOTUuODdMNjIuMDAgOTUuODBMNjIuNTcgOTUuODdMNjMuMTAgOTYuMDlMNjMuNTYgOTYuNDRMNjMuOTEgOTYuOTBMNjQuMTMgOTcuNDNaIE04MC4yMCA5OC4wMEw4MC4xMyA5OC41N0w3OS45MSA5OS4xMEw3OS41NiA5OS41Nkw3OS4xMCA5OS45MUw3OC41NyAxMDAuMTNMNzguMDAgMTAwLjIwTDc3LjQzIDEwMC4xM0w3Ni45MCA5OS45MUw3Ni40NCA5OS41Nkw3Ni4wOSA5OS4xMEw3NS44NyA5OC41N0w3NS44MCA5OC4wMEw3NS44NyA5Ny40M0w3Ni4wOSA5Ni45MEw3Ni40NCA5Ni40NEw3Ni45MCA5Ni4wOUw3Ny40MyA5NS44N0w3OC4wMCA5NS44MEw3OC41NyA5NS44N0w3OS4xMCA5Ni4wOUw3OS41NiA5Ni40NEw3OS45MSA5Ni45MEw4MC4xMyA5Ny40M1ogTTczLjIwIDEyOC4wMEw3My4xMyAxMjguNTdMNzIuOTEgMTI5LjEwTDcyLjU2IDEyOS41Nkw3Mi4xMCAxMjkuOTFMNzEuNTcgMTMwLjEzTDcxLjAwIDEzMC4yMEw3MC40MyAxMzAuMTNMNjkuOTAgMTI5LjkxTDY5LjQ0IDEyOS41Nkw2OS4wOSAxMjkuMTBMNjguODcgMTI4LjU3TDY4LjgwIDEyOC4wMEw2OC44NyAxMjcuNDNMNjkuMDkgMTI2LjkwTDY5LjQ0IDEyNi40NEw2OS45MCAxMjYuMDlMNzAuNDMgMTI1Ljg3TDcxLjAwIDEyNS44MEw3MS41NyAxMjUuODdMNzIuMTAgMTI2LjA5TDcyLjU2IDEyNi40NEw3Mi45MSAxMjYuOTBMNzMuMTMgMTI3LjQzWiBNOTcuMjAgODYuMDBMOTcuMTMgODYuNTdMOTYuOTEgODcuMTBMOTYuNTYgODcuNTZMOTYuMTAgODcuOTFMOTUuNTcgODguMTNMOTUuMDAgODguMjBMOTQuNDMgODguMTNMOTMuOTAgODcuOTFMOTMuNDQgODcuNTZMOTMuMDkgODcuMTBMOTIuODcgODYuNTdMOTIuODAgODYuMDBMOTIuODcgODUuNDNMOTMuMDkgODQuOTBMOTMuNDQgODQuNDRMOTMuOTAgODQuMDlMOTQuNDMgODMuODdMOTUuMDAgODMuODBMOTUuNTcgODMuODdMOTYuMTAgODQuMDlMOTYuNTYgODQuNDRMOTYuOTEgODQuOTBMOTcuMTMgODUuNDNaIE04MS4yMCA4Ni4wMEw4MS4xMyA4Ni41N0w4MC45MSA4Ny4xMEw4MC41NiA4Ny41Nkw4MC4xMCA4Ny45MUw3OS41NyA4OC4xM0w3OS4wMCA4OC4yMEw3OC40MyA4OC4xM0w3Ny45MCA4Ny45MUw3Ny40NCA4Ny41Nkw3Ny4wOSA4Ny4xMEw3Ni44NyA4Ni41N0w3Ni44MCA4Ni4wMEw3Ni44NyA4NS40M0w3Ny4wOSA4NC45MEw3Ny40NCA4NC40NEw3Ny45MCA4NC4wOUw3OC40MyA4My44N0w3OS4wMCA4My44MEw3OS41NyA4My44N0w4MC4xMCA4NC4wOUw4MC41NiA4NC40NEw4MC45MSA4NC45MEw4MS4xMyA4NS40M1oiIGZpbGw9IiMxRTI0MkEiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik04OC4wMCA0OC4wMEw2Mi4wMCA5OC4wMEw3OC4wMCA5OC4wMEw3MS4wMCAxMjguMDBMOTUuMDAgODYuMDBMNzkuMDAgODYuMDBaIiBmaWxsPSIjRjI2QjFEIi8+PC9nPjwvc3ZnPg==" alt="" width="43" height="43"><div><div class="brand-name">VLASOVTECH</div><div class="descriptor">умный дом и электромонтаж</div></div></div><span class="badge">Базовые цены · от</span></div></header>
 <main>
-  <div class="intro"><div><h1>Какая электрика и умный дом подходят Вашему объекту?</h1><p>Укажите параметры и выберите функции. Получите предварительную конфигурацию, которую можно обсудить с инженером.</p><a class="mobile-jump" href="#result">Посмотреть результат</a></div></div>
-  <div class="mode" role="group" aria-label="Вид результата"><button type="button" data-mode="client" aria-pressed="true">Для заказчика</button><button type="button" data-mode="designer" aria-pressed="false">Для дизайнера</button></div>
+  <div class="intro"><div><h1>Какая электрика и умный дом подходят Вашему объекту?</h1><p>Несколько коротких вопросов — и предварительный ориентир для обсуждения с инженером.</p></div></div>
   <noscript>Для работы калькулятора необходимо включить JavaScript в браузере.</noscript>
   <div class="layout">
     <form id="configuration" class="form-stack" novalidate>
-      <section class="section" aria-labelledby="object-title"><div class="section-head"><span class="num" aria-hidden="true">01</span><h2 id="object-title">Объект</h2></div>
-        <div class="grid">
-          <div class="field"><label for="object_type">Тип объекта *</label><select id="object_type" name="object_type" required><option value="">Выберите</option><option value="apartment">Квартира</option><option value="house">Дом</option></select></div>
-          <div class="field"><label for="area_m2">Площадь, м² *</label><input id="area_m2" name="area_m2" type="number" min="0.01" step="0.01" placeholder="Например, 80" required inputmode="decimal"></div>
-          <div class="field"><label for="rooms_count">Жилые комнаты *</label><select id="rooms_count" name="rooms_count" required><option value="">Выберите</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option value="6+">6 и более</option></select></div>
-          <div class="field"><label for="repair_stage">Стадия ремонта *</label><select id="repair_stage" name="repair_stage" required><option value="">Выберите</option><option value="before">До ремонта</option><option value="rough">Черновой этап</option><option value="finishing">Чистовой этап</option><option value="finished">Готовый ремонт</option></select></div>
-          <div class="field wide"><label for="city">Город / регион *</label><select id="city" name="city" required><option value="">Выберите</option><option value="nn">Нижний Новгород</option><option value="moscow">Москва</option><option value="region">Нижегородская область</option><option value="other">Другое — уточним географию</option></select></div>
-          <fieldset class="wide"><legend>Что требуется? *</legend><div class="choices two"><label class="choice"><input type="radio" id="need_smart_home" name="need_smart_home" value="electric" checked><span>Только электрика</span></label><label class="choice"><input type="radio" name="need_smart_home" value="smart"><span>Электрика + умный дом</span></label></div></fieldset>
-        </div><p class="helper">* Обязательные поля. Площадь и комнаты описывают объект; стоимость по ним пока не рассчитывается.</p>
+      <section class="section" aria-labelledby="object-title"><div class="section-head"><span class="num" aria-hidden="true">01</span><h2 id="object-title">Тип объекта</h2></div>
+        <fieldset><legend class="skip">Тип объекта</legend><div class="choices two"><label class="choice"><input type="radio" name="object_type" value="apartment" required><span>Квартира</span></label><label class="choice"><input type="radio" name="object_type" value="house" required><span>Дом</span></label></div></fieldset>
       </section>
-      <section class="section" aria-labelledby="electric-title"><div class="section-head"><span class="num" aria-hidden="true">02</span><h2 id="electric-title">Электрика</h2></div>
-        <fieldset><legend>Предпочтительный уровень *</legend><div class="choices"><label class="choice"><input type="radio" id="electric_package" name="electric_package" value="economy"><span>Эконом</span></label><label class="choice"><input type="radio" name="electric_package" value="comfort" checked><span>Комфорт</span></label><label class="choice"><input type="radio" name="electric_package" value="premium"><span>Премиум</span></label></div><p class="helper">Состав и стоимость уровней будут уточнены после обсуждения объекта.</p></fieldset>
-        <fieldset class="space"><legend>Нужен проект электрики? *</legend><div class="choices"><label class="choice"><input type="radio" id="need_electro_project" name="need_electro_project" value="yes" required><span>Да</span></label><label class="choice"><input type="radio" name="need_electro_project" value="no" required><span>Нет</span></label><label class="choice"><input type="radio" name="need_electro_project" value="unknown" required><span>Не знаю</span></label></div></fieldset>
-        <div class="space"><h3>Подготовка кабелей и точек подключения</h3><p class="helper">Подготовка не включает автоматически оборудование и управление умным домом.</p><div id="preparations" class="preps space"></div></div>
-        <p id="stage-note" class="note" hidden></p>
+      <section class="section" aria-labelledby="area-title"><div class="section-head"><span class="num" aria-hidden="true">02</span><h2 id="area-title">Площадь</h2></div>
+        <div class="field"><label for="area_m2">Площадь, м²</label><input id="area_m2" name="area_m2" type="number" min="0.01" step="0.01" placeholder="Например, 80" required inputmode="decimal"></div>
       </section>
-      <fieldset id="smart-block" class="section" hidden disabled aria-labelledby="smart-title"><div class="section-head"><span class="num" aria-hidden="true">03</span><h2 id="smart-title">Умный дом</h2></div>
-        <fieldset><legend>Предпочтительная система *</legend><div class="choices system-grid"><label class="choice"><input type="radio" id="smart_system" name="smart_system" value="unknown" checked><span>Не знаю — помогите выбрать</span></label><label class="choice"><input type="radio" name="smart_system" value="aqara"><span>Aqara</span></label><label class="choice"><input type="radio" name="smart_system" value="wb"><span>Wiren Board</span></label><label class="choice"><input type="radio" name="smart_system" value="iridi"><span>iRidi</span></label></div></fieldset>
-        <fieldset class="space"><legend>Что важнее? * <span class="hint">Можно выбрать несколько</span></legend><div class="check-grid"><label class="choice"><input type="checkbox" id="priority_focus" name="priority_focus" value="budget"><span>Бюджет</span></label><label class="choice"><input type="checkbox" name="priority_focus" value="automation"><span>Автоматизация</span></label><label class="choice"><input type="checkbox" name="priority_focus" value="design"><span>Дизайн и сценарии</span></label><label class="choice"><input type="checkbox" name="priority_focus" value="balance"><span>Баланс</span></label></div></fieldset>
-        <div class="space check-grid"><label class="choice"><input type="checkbox" id="need_scene_switches" name="need_scene_switches"><span>Нужны сценарные выключатели</span></label><label class="choice"><input type="checkbox" id="need_visual_premium_ui" name="need_visual_premium_ui"><span>Важен визуальный интерфейс управления</span></label></div>
-        <div class="space"><h3>Функции</h3><p id="house-note" class="helper" hidden>Для дома отдельно проверьте отопление, микроклимат и защиту от протечек. Они не добавляются автоматически.</p><p class="helper">Отметьте только нужные функции. Диммируемые группы входят в общее число групп света.</p><div id="functions" class="check-grid space"></div><div id="quantities" class="quantities grid"></div></div>
+      <section class="section" aria-labelledby="need-title"><div class="section-head"><span class="num" aria-hidden="true">03</span><h2 id="need-title">Что нужно?</h2></div>
+        <fieldset><legend class="skip">Что нужно?</legend><div class="choices two"><label class="choice"><input type="radio" name="need_smart_home" value="electric" checked><span>Только электрика</span></label><label class="choice"><input type="radio" name="need_smart_home" value="smart"><span>Электрика + умный дом</span></label></div></fieldset>
+      </section>
+      <fieldset id="smart-block" class="section" hidden disabled aria-labelledby="smart-title"><div class="section-head"><span class="num" aria-hidden="true">04</span><h2 id="smart-title">Функции умного дома</h2></div>
+        <p class="helper">Можно выбрать несколько. Количество устройств уточним с инженером.</p><div class="check-grid space">
+          <label class="choice"><input type="checkbox" name="functions" value="light"><span>Свет</span></label>
+          <label class="choice"><input type="checkbox" name="functions" value="curtains"><span>Шторы</span></label>
+          <label class="choice"><input type="checkbox" name="functions" value="climate"><span>Климат</span></label>
+          <label class="choice"><input type="checkbox" name="functions" value="heating"><span>Отопление / тёплый пол</span></label>
+          <label class="choice"><input type="checkbox" name="functions" value="leak"><span>Защита от протечек</span></label>
+        </div>
       </fieldset>
-      <div class="form-bottom actions"><button type="submit" class="secondary">Перейти к результату</button><button type="reset" class="secondary">Сбросить</button></div>
+      <section class="section" aria-labelledby="priority-title"><div class="section-head"><span id="priority-number" class="num" aria-hidden="true">04</span><h2 id="priority-title">Главный приоритет</h2></div>
+        <fieldset><legend class="skip">Главный приоритет</legend><div class="choices two">
+          <label class="choice"><input type="radio" name="main_priority" value="budget" required><span>Экономно<small>Базовый уровень — Эконом</small></span></label>
+          <label class="choice"><input type="radio" name="main_priority" value="balance" required><span>Оптимально<small>Базовый уровень — Комфорт</small></span></label>
+          <label class="choice"><input type="radio" name="main_priority" value="automation" required><span>Максимум автоматизации<small>Базовый уровень — Премиум</small></span></label>
+          <label class="choice"><input type="radio" name="main_priority" value="design" required><span>Красивый интерфейс<small>Базовый уровень — Премиум</small></span></label>
+        </div></fieldset>
+      </section>
+      <div class="form-bottom actions"><button type="submit" class="secondary">К результату</button><button type="reset" class="secondary">Сбросить</button></div>
     </form>
-    <aside id="result" tabindex="-1" aria-labelledby="result-title">
-      <div class="result"><h2 id="result-title">Предварительная конфигурация</h2><small>Отправная точка для обсуждения</small><div id="result-content" aria-live="polite" aria-atomic="true"></div><button type="button" id="request" class="primary" disabled>Подготовить запрос инженеру</button><button type="button" id="copy-result" class="secondary" disabled>Скопировать конфигурацию</button><div id="result-copy-status" class="copy-status" role="status"></div></div>
-      <details id="assumptions" class="assumptions"><summary>Допущения и вопросы</summary><div id="assumptions-content"></div></details>
-      <div id="internal" class="assumptions" hidden><strong>Проверка активных полей</strong><p class="helper">Это открытый просмотр данных прототипа. Скрытые поля не участвуют в результате. Показаны публичные ставки «от». Коэффициенты и детальная калькуляция не подключены.</p><pre id="raw" class="raw"></pre></div>
-    </aside>
+    <aside id="result" tabindex="-1" aria-labelledby="result-title"><div class="result">
+      <h2 id="result-title">Ваш предварительный результат</h2><div id="result-content" aria-live="polite" aria-atomic="true"></div>
+      <div id="contact-actions" hidden>
+        <a id="telegram-cta" class="primary messenger" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
+        <a id="vk-cta" class="primary messenger vk-button" target="_blank" rel="noopener noreferrer">Написать в ВК</a>
+        <p class="why">Telegram откроется с готовым текстом. Для VK текст скопируется — вставьте его в диалог.</p>
+        <button type="button" id="copy-result" class="secondary">Скопировать текст</button>
+        <p id="result-status" class="status" role="status"></p>
+        <details id="manual-copy" class="manual-copy" hidden><summary>Готовый текст сообщения</summary><textarea id="message-text" readonly aria-label="Готовый текст сообщения"></textarea></details>
+      </div>
+    </div></aside>
   </div>
-  <footer class="foot">VlasovTech · Предварительный подбор не является коммерческим предложением. <a href="https://t.me/vlasovtech_pro" target="_blank" rel="noopener noreferrer">Обсудить объект в Telegram</a> · <a href="tel:+79100071727">+7 (910) 007-17-27</a></footer>
+  <footer class="foot">VlasovTech · Ориентир не является точной сметой. Состав и стоимость уточним по плану объекта. <a href="tel:+79100071727">+7 (910) 007-17-27</a></footer>
 </main>
-<dialog id="request-dialog" aria-labelledby="dialog-title"><h2 id="dialog-title">Запрос инженеру</h2><p>Скопируйте текст и приложите план объекта в переписке. Запрос не отправляется автоматически.</p><textarea id="request-text" aria-label="Текст запроса инженеру" readonly></textarea><div class="actions"><button type="button" id="copy-request" class="primary">Скопировать текст</button><a class="secondary" href="https://t.me/vlasovtech_pro" target="_blank" rel="noopener noreferrer">Открыть Telegram</a><a class="secondary" href="https://vk.ru/vlasovtech" target="_blank" rel="noopener noreferrer">Открыть ВКонтакте</a><button type="button" id="close-dialog" class="secondary">Закрыть</button></div><div id="dialog-copy-status" class="copy-status" role="status"></div></dialog>
 <script>
+
 'use strict';
-// Only provisional selection rules. Never put private pricing in static HTML.
-const form = document.getElementById('configuration');
-const $ = id => document.getElementById(id);
+const CONTACTS = Object.freeze({telegramUsername:'vlasovtech_pro',vkMessagesUrl:'https://vk.me/vlasovtech'});
+const form=document.getElementById('configuration');
+const $=id=>document.getElementById(id);
+function esc(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function radio(name){return form.querySelector(`input[name="${name}"]:checked`)?.value||'';}
 const labelMaps = {
   object_type:{apartment:'Квартира',house:'Дом'},repair_stage:{before:'До ремонта',rough:'Черновой этап',finishing:'Чистовой этап',finished:'Готовый ремонт'},
   city:{nn:'Нижний Новгород',moscow:'Москва',region:'Нижегородская область',other:'Другое'},
@@ -94,48 +114,6 @@ const fnDefs = [
   ['fn_microclimate','Микроклимат',null,null,null],
   ['fn_scene_switches','Сценарные выключатели','scene_switches_count','Сценарные выключатели','выключателей']
 ];
-const requiredNames = [['object_type','Тип объекта'],['area_m2','Площадь'],['rooms_count','Жилые комнаты'],['repair_stage','Стадия ремонта'],['city','Город / регион'],['need_electro_project','Проект электрики']];
-let mode='client',lastResult=null,validationRequested=false;
-for(const [id,label] of prepDefs){
-  const fieldset=document.createElement('fieldset');fieldset.className='prep';fieldset.id='row-'+id;
-  fieldset.innerHTML=`<legend>${label}</legend><div class="choices two"><label class="choice"><input type="radio" id="${id}" name="${id}" value="yes"><span>Да</span></label><label class="choice"><input type="radio" name="${id}" value="no" checked><span>Нет</span></label></div>`;
-  $('preparations').append(fieldset);
-}
-for(const [id,label,count,countLabel,unit] of fnDefs){
-  const entry=document.createElement('label');entry.className='choice';entry.innerHTML=`<input type="checkbox" id="${id}" name="${id}"><span>${label}</span>`;$('functions').append(entry);
-  if(count){const field=document.createElement('div');field.className='field quantity';field.id='row-'+count;field.hidden=true;field.innerHTML=`<label for="${count}">${countLabel} *</label><input type="number" id="${count}" name="${count}" min="1" step="1" inputmode="numeric" disabled required><div class="unit">${unit}</div>`;$('quantities').append(field);}
-}
-function radio(name){return form.querySelector(`input[name="${name}"]:checked`)?.value||'';}
-function setRadio(name,value){const el=form.querySelector(`input[name="${name}"][value="${value}"]`);if(el)el.checked=true;}
-function esc(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function syncVisibility(){
-  const smart=radio('need_smart_home')==='smart';$('smart-block').hidden=!smart;$('smart-block').disabled=!smart;
-  const scenePrep=radio('electric_package')!=='economy';$('row-need_scene_switch_prep').hidden=!scenePrep;$('row-need_scene_switch_prep').disabled=!scenePrep;
-  for(const [id,,count] of fnDefs){if(count){const enabled=smart&&$(id).checked;$('row-'+count).hidden=!enabled;$(count).disabled=!enabled;}}
-  $('house-note').hidden=$('object_type').value!=='house';
-  const late=['finishing','finished'].includes($('repair_stage').value);$('stage-note').hidden=!late;
-  $('stage-note').textContent=$('repair_stage').value==='finished'?'При готовом ремонте сначала проверим доступную проводку, возможность установки оборудования и допустимость вмешательства в отделку.':'На чистовом этапе сначала проверим выполненную проводку и точки подключения. Подготовка под новые функции может потребовать согласования с отделочниками.';
-}
-function collect(){
-  const data={};for(const el of Array.from(form.elements)){
-    if(!el.name||el.matches(':disabled'))continue;
-    if(el.type==='radio'){if(el.checked)data[el.name]=el.value;}
-    else if(el.name==='priority_focus'){if(!data.priority_focus)data.priority_focus=[];if(el.checked)data.priority_focus.push(el.value);}
-    else if(el.type==='checkbox')data[el.name]=el.checked;
-    else if(el.type==='number')data[el.name]=el.value===''?null:Number(el.value);
-    else data[el.name]=el.value;
-  }return data;
-}
-function getErrors(data){
-  const errors=[];
-  for(const [id,label] of requiredNames){if(data[id]==null||data[id]==='')errors.push({id,label:'Укажите: '+label.toLowerCase()});}
-  const area=$('area_m2');if(area.validity.badInput||(data.area_m2!==null&&(!Number.isFinite(data.area_m2)||data.area_m2<=0||!area.validity.valid)))errors.push({id:'area_m2',label:'Площадь должна быть положительным числом с точностью до 0,01 м²'});
-  if(data.need_smart_home==='smart'){
-    if(!data.priority_focus?.length)errors.push({id:'priority_focus',label:'Выберите хотя бы один приоритет'});
-    for(const [id,,count,countLabel] of fnDefs){if(count&&data[id]&&(data[count]===null||!Number.isSafeInteger(data[count])||data[count]<1))errors.push({id:count,label:countLabel+': укажите целое число от 1'});}
-    if(data.fn_dimming&&data.dimming_groups_count!==null&&data.light_groups_count!==null&&data.dimming_groups_count>data.light_groups_count)errors.push({id:'dimming_groups_count',label:'Диммируемых групп не может быть больше общего числа групп света'});
-  }return errors;
-}
 function recommend(data){
   const smart=data.need_smart_home==='smart',focus=data.priority_focus||[],climate=smart&&(data.fn_ac||data.fn_floor_heat||data.fn_radiator_heat||data.fn_microclimate),scene=smart&&data.fn_scene_switches;
   const fnLabels=smart?fnDefs.filter(([id])=>data[id]).map(([id,label,count])=>label+(count?': '+(data[count]??'уточнить'):'')):[];
@@ -297,9 +275,6 @@ function resultCopy(data,r){
   return originalResultCopy(data,r);
 }
 
-function listCopy(items){return `<ul>${items.filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;}
-// Public starting rates approved by the owner on 2026.10.11.
-// Display lookup only: no area multiplication, coefficients, minimums or modules.
 const publicPriceGrid = {
   electric:{'Эконом':2000,'Комфорт':3000,'Премиум':4000},
   smart:{aqara:1500,wb:3000,iridi:3000},
@@ -309,107 +284,101 @@ const publicPriceGrid = {
     'Премиум':{none:4000,aqara:5500,wb:7000,iridi:7000}
   }
 };
-function publicRate(value){return 'от '+String(value).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' ₽/м²';}
-function priceShowcase(data,r){
-  const base=publicPriceGrid.electric[r.package];
+
+// Only an adapter for the five client questions. No new recommendation rules.
+const priorityPackages={budget:'economy',balance:'comfort',automation:'premium',design:'premium'};
+const shortFunctions={light:'Свет',curtains:'Шторы',climate:'Климат',heating:'Отопление / тёплый пол',leak:'Защита от протечек'};
+const functionSignals={light:'fn_light',curtains:'fn_curtains',climate:'fn_microclimate',heating:'fn_radiator_heat',leak:'fn_leak'};
+let lastResult=null,validationRequested=false;
+function collect(){
+  const smart=radio('need_smart_home')==='smart',priority=radio('main_priority');
+  const selected=smart?[...form.querySelectorAll('[name="functions"]:checked')].map(x=>x.value):[];
+  const data={object_type:radio('object_type'),area_m2:$('area_m2').value===''?null:Number($('area_m2').value),need_smart_home:smart?'smart':'electric',main_priority:priority,selected_functions:selected,
+    electric_package:priorityPackages[priority]||'comfort',priority_focus:smart&&priority?[priority]:[],smart_system:'unknown',need_visual_premium_ui:smart&&priority==='design',
+    rooms_count:null,repair_stage:'',city:'',need_electro_project:'unknown',need_scene_switches:false};
+  for(const [id] of prepDefs)data[id]='no';
+  for(const [id,,count] of fnDefs){data[id]=false;if(count)data[count]=null;}
+  for(const value of selected)data[functionSignals[value]]=true;
+  return data;
+}
+function getErrors(data){
+  const errors=[];
+  if(!data.object_type)errors.push({selector:'[name="object_type"]',label:'Выберите тип объекта.'});
+  const area=$('area_m2');
+  if(data.area_m2===null||!Number.isFinite(data.area_m2)||data.area_m2<=0||!area.validity.valid)errors.push({selector:'#area_m2',label:'Укажите положительную площадь с точностью до 0,01 м².'});
+  else if(!Number.isSafeInteger(Math.ceil(data.area_m2*7000)))errors.push({selector:'#area_m2',label:'Проверьте площадь: число слишком велико для расчёта.'});
+  if(!data.main_priority)errors.push({selector:'[name="main_priority"]',label:'Выберите главный приоритет.'});
+  return errors;
+}
+function priceOptions(data,r){
   const ids=data.need_smart_home==='smart'&&r.systems.length?r.systems:['none'];
-  const lines=ids.map(id=>(id==='none'?r.package:r.package+' + '+labelMaps.smart_system[id])+' — '+publicRate(publicPriceGrid.combinations[r.package][id]));
-  let why='Электрика «'+r.package+'» — '+publicRate(base)+'.';
-  if(ids[0]!=='none')why+=' Умный дом — доплата к электрике: '+ids.map(id=>labelMaps.smart_system[id]+' — '+publicRate(publicPriceGrid.smart[id])).join('; ')+'.';
-  else if(data.need_smart_home==='smart')why+=' Умный дом пока не учтён: сначала нужно выбрать функции.';
-  if(ids.length>1)why+=' Это альтернативные варианты; доплаты систем не складываются.';
-  why+=' Базовый ориентир, не точная смета. Состав и стоимость уточним после плана.';
-  return {label:'Ценовой ориентир за м²',content:lines.join('; '),why,lines};
+  return ids.map(id=>({id,label:id==='none'?'Электрика '+r.package:r.package+' + '+labelMaps.smart_system[id],rate:publicPriceGrid.combinations[r.package][id],total:Math.round(data.area_m2*publicPriceGrid.combinations[r.package][id])}));
 }
-function publicPriceText(data,r){const p=priceShowcase(data,r);return p.label+':\n'+p.lines.join('\n')+'\n'+p.why;}
-
-function renderResultCopy(data,r,copy){
-  let html=block('Рекомендуемый уровень электрики',r.package,copy.packageWhy);
-  if(r.package!==labelMaps.electric_package[data.electric_package])html+=`<p class="why">Ваш выбор: ${esc(labelMaps.electric_package[data.electric_package])}</p>`;
-  if(data.need_smart_home==='smart'){
-    html+=block('Рекомендуемая система',r.systems.length?r.systems.map(x=>labelMaps.smart_system[x]).join(' / '):(copy.systemEmptyText||'Нужно уточнить функции'));
-    html+=`<p class="why">Выбранная система: ${esc(labelMaps.smart_system[data.smart_system])}</p>`;
-  }else html+=block('Состав запроса',copy.systemEmptyText||'Только электрика');
-  html+=`<div class="result-block"><h3 class="copy-heading">Что определило рекомендацию</h3>${listCopy(copy.influences)}</div>`;
-  if(data.need_smart_home==='smart')html+=`<div class="result-block"><h3 class="copy-heading">Выбранные функции</h3>${r.fnLabels.length?listCopy(r.fnLabels):'<p class="why">Функции пока не выбраны.</p>'}</div>`;
-  for(const card of copy.cards){
-    html+=`<section class="system-option" data-system="${esc(card.id)}"><h3>${esc(card.title)}</h3><p class="why">${esc(card.why)}</p><details class="copy-details"><summary>Стартовая конфигурация для обсуждения</summary><p class="why">${esc(copy.starterNote)}</p>${listCopy(card.starter)}</details><details class="copy-details"><summary>По этому варианту согласуем отдельно</summary>${listCopy(card.separate)}</details></section>`;
-  }
-  html+=`<details class="copy-details electric-starter"><summary>Стартовый состав электрики</summary><p class="why">${esc(copy.starterNote)}</p>${listCopy(copy.electricStarter)}</details>`;
-  html+=`<details class="copy-details common-separate"><summary>Что согласуем и рассчитаем отдельно</summary><p class="why">${esc(copy.separateNote)}</p>${listCopy(copy.separate)}</details>`;
-  const price=priceShowcase(data,r);html+=block(price.label,price.content,price.why);
-  html+=`<p class="why result-cta">${esc(copy.cta)}</p>`;
-  return html;
-}
-
-function block(label,content,why=''){return `<div class="result-block"><div class="eyebrow">${esc(label)}</div><div class="recommendation">${esc(content)}</div>${why?`<p class="why">${esc(why)}</p>`:''}</div>`;}
-function refresh(){
-  syncVisibility();const data=collect(),errors=getErrors(data);const r=recommend(data);lastResult={data,errors,r};
-  for(const el of form.querySelectorAll('[aria-invalid]'))el.removeAttribute('aria-invalid');
-  if(validationRequested)for(const e of errors)$(e.id)?.setAttribute('aria-invalid','true');
-  let html='';
-  if(errors.length){html=`<div class="result-block"><p class="status">Заполните параметры, чтобы получить конфигурацию.</p><ul class="errors">${errors.map(e=>`<li>${esc(e.label)}</li>`).join('')}</ul></div>`;}
-  else{
-    html=renderResultCopy(data,r,resultCopy(data,r));
-    if(mode!=='client')html+=`<div class="result-block"><div class="eyebrow">Параметры объекта</div><p class="why">${esc(labelMaps.object_type[data.object_type])} · ${esc(data.area_m2)} м² · комнат: ${esc(data.rooms_count)}<br>${esc(labelMaps.repair_stage[data.repair_stage])} · ${esc(labelMaps.city[data.city])}<br>Проект электрики: ${esc(labelMaps.need_electro_project[data.need_electro_project])}</p></div>`;
-    if(r.notes.length>2)html+=`<div class="note">${esc(r.notes.slice(2).join(' '))}</div>`;
-  }
-  $('result-content').innerHTML=html;$('request').textContent='Обсудить с инженером';$('request').disabled=errors.length>0;$('copy-result').disabled=errors.length>0;
-  $('assumptions-content').innerHTML=`<ul>${r.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`;
-  $('assumptions').open=mode==='designer';$('internal').hidden=mode!=='internal';
-  $('raw').textContent=JSON.stringify({active_fields:data,validation_errors:errors.map(e=>e.label),classification:{object:data.object_type||null,smart_home:data.need_smart_home==='smart'},suggested_package:errors.length?null:r.package,suggested_system:errors.length?null:r.systems.map(x=>labelMaps.smart_system[x]),pricing:{status:'public_starting_rates',rate_unit:'₽/м²',orientir:errors.length?[]:priceShowcase(data,r).lines}},null,2);
-}
-form.addEventListener('input',e=>{
-  const el=e.target;
-  if(el.id==='need_scene_switches')$('fn_scene_switches').checked=el.checked;
-  if(el.id==='fn_scene_switches')$('need_scene_switches').checked=el.checked;
-  if(el.id==='fn_dimming'&&el.checked)$('fn_light').checked=true;
-  if(el.id==='fn_light'&&!el.checked)$('fn_dimming').checked=false;
-  if(el.name==='priority_focus'&&el.checked){if(el.value==='balance')form.querySelectorAll('[name="priority_focus"]').forEach(x=>{if(x!==el)x.checked=false;});else form.querySelector('[name="priority_focus"][value="balance"]').checked=false;}
-  $('result-copy-status').textContent='';refresh();
-});
-form.addEventListener('change',refresh);
-form.addEventListener('submit',e=>{e.preventDefault();validationRequested=true;refresh();if(lastResult.errors.length){const el=$(lastResult.errors[0].id);el?.focus();el?.scrollIntoView({block:'center'});}else $('result').focus();});
-form.addEventListener('reset',()=>{validationRequested=false;setTimeout(()=>{refresh();$('result-copy-status').textContent='';},0);});
-document.querySelectorAll('[data-mode]').forEach(btn=>btn.addEventListener('click',()=>{mode=btn.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x===btn)));refresh();}));
+function number(value){return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(value).replace(/ /g,' ');}
 function summaryText(){
-  const {data:d,r}=lastResult,c=resultCopy(d,r);
-  if(c.approvedText)return ['Здравствуйте! Хочу обсудить электрику'+(d.need_smart_home==='smart'?' и умный дом':'')+'.','',`Объект: ${labelMaps.object_type[d.object_type]}, ${d.area_m2} м², комнат: ${d.rooms_count}.`,`Город / регион: ${labelMaps.city[d.city]}.`,`Стадия: ${labelMaps.repair_stage[d.repair_stage]}.`,`Выбранная система: ${labelMaps.smart_system[d.smart_system]||'Не выбрана'}.`,`Проект электрики: ${labelMaps.need_electro_project[d.need_electro_project]}.`,'',c.approvedText,'',publicPriceText(d,r),'','Бюджет пока не рассчитан. План объекта приложу отдельно.'].join('\n');
-  const lines=['Здравствуйте! Хочу обсудить электрику'+(d.need_smart_home==='smart'?' и умный дом':'')+'.','',`Объект: ${labelMaps.object_type[d.object_type]}, ${d.area_m2} м², комнат: ${d.rooms_count}.`,`Город / регион: ${labelMaps.city[d.city]}.`,`Стадия: ${labelMaps.repair_stage[d.repair_stage]}.`,`Выбранный уровень электрики: ${labelMaps.electric_package[d.electric_package]}.`,`Рекомендуемый уровень: ${r.package}.`,c.packageWhy,`Проект электрики: ${labelMaps.need_electro_project[d.need_electro_project]}.`,`Подготовка: ${r.preparations.join(', ')||'не выбрана'}.`,'','Что определило рекомендацию:',...c.influences];
-  if(d.need_smart_home==='smart'){
-    lines.push('',`Выбранная система: ${labelMaps.smart_system[d.smart_system]}.`,`Рекомендация системы: ${r.systems.map(x=>labelMaps.smart_system[x]).join(' / ')||'нужно уточнить функции'}.`,`Выбранные функции: ${r.fnLabels.join('; ')||'не выбраны'}.`);
-    for(const card of c.cards)lines.push('',card.title+':',card.why,'Стартовая конфигурация для обсуждения:',c.starterNote,...card.starter.map(x=>'• '+x),'По этому варианту согласуем отдельно:',...card.separate.map(x=>'• '+x));
+  if(!lastResult||lastResult.errors.length)return '';
+  const {data:d,r,prices}=lastResult;
+  return ['Здравствуйте! Я прошёл(а) калькулятор VlasovTech.','',
+    'Объект: '+labelMaps.object_type[d.object_type], 'Площадь: '+number(d.area_m2)+' м²',
+    'Что нужно: '+(d.need_smart_home==='smart'?'электрика + умный дом':'только электрика'), 'Пакет: '+r.package,
+    'Система: '+(d.need_smart_home!=='smart'?'не требуется':r.systems.map(x=>labelMaps.smart_system[x]).join(' / ')||'уточним с инженером'),
+    'Функции: '+(d.selected_functions.map(x=>shortFunctions[x]).join(', ')|| (d.need_smart_home==='smart'?'уточним с инженером':'не требуются')),
+    ...prices.map(p=>'Ориентир'+(prices.length>1?' ('+labelMaps.smart_system[p.id]+')':'')+': от '+number(p.rate)+' ₽/м², предварительно от '+number(p.total)+' ₽'),
+    ...(d.need_smart_home==='smart'&&!r.systems.length?['Умный дом пока не включён в ориентир.']:[]),
+    '', 'Хочу обсудить расчёт с инженером.'].join('\n');
+}
+function refresh(){
+  const smart=radio('need_smart_home')==='smart';$('smart-block').hidden=!smart;$('smart-block').disabled=!smart;$('priority-number').textContent=smart?'05':'04';
+  const data=collect(),errors=getErrors(data),r=recommend(data);
+  lastResult={data,errors,r,prices:errors.length?[]:priceOptions(data,r)};
+  $('contact-actions').hidden=!!errors.length;
+  $('telegram-cta').removeAttribute('href');$('vk-cta').removeAttribute('href');$('message-text').value='';$('manual-copy').hidden=true;$('manual-copy').open=false;$('result-status').textContent='';
+  $('area_m2').setAttribute('aria-invalid',String(validationRequested&&errors.some(x=>x.selector==='#area_m2')));
+  if(errors.length){
+    $('result-content').innerHTML='<p class="why">Выберите тип объекта, укажите площадь и главный приоритет. Результат появится сразу.</p>'+(validationRequested?'<ul class="errors">'+errors.map(e=>'<li>'+esc(e.label)+'</li>').join('')+'</ul>':'');
+    return;
   }
-  lines.push('','Стартовый состав электрики:',...c.electricStarter.map(x=>'• '+x),'','Что согласуем и рассчитаем отдельно:',c.separateNote,...c.separate.map(x=>'• '+x),'',publicPriceText(d,r),'','Бюджет пока не рассчитан. План объекта приложу отдельно.');
-  return lines.join('\n');
+  const packageWhy=r.package!==labelMaps.electric_package[data.electric_package]?'Для выбранных функций предлагаем Комфорт; необходимость перехода подтвердит инженер.':'Предварительный уровень по Вашему приоритету.';
+  let systemWhy='';
+  if(smart){
+    if(!r.systems.length)systemWhy='Функции пока не выбраны — обсудим их с инженером. Умный дом в цене пока не учтён.';
+    else if(r.systems.includes('wb'))systemWhy='Wiren Board — инженерная гибкость, интеграции, климат и логика.'+(r.systems.includes('iridi')?' iRidi — самостоятельный вариант для автоматизации, сценариев и интерфейса.':r.systems.includes('aqara')?' Aqara — более доступный вход в базовую автоматизацию.':'');
+    else if(r.systems.includes('iridi'))systemWhy='iRidi — самостоятельная система: автоматизация, сценарии и красивый интерфейс.';
+    else systemWhy='Aqara — доступный вход в автоматизацию для простых задач квартиры.';
+  }
+  $('result-content').innerHTML='<div class="result-block"><div class="eyebrow">Пакет электрики</div><div class="recommendation">'+esc(r.package)+'</div><p class="why">'+esc(packageWhy)+'</p></div>'+
+    (smart?'<div class="result-block"><div class="eyebrow">Система</div><div class="recommendation">'+esc(r.systems.map(x=>labelMaps.smart_system[x]).join(' / ')||'Уточним вместе')+'</div><p class="why">'+esc(systemWhy)+'</p>'+(data.selected_functions.length?'<p class="why">Функции: '+esc(data.selected_functions.map(x=>shortFunctions[x]).join(', '))+'.</p>':'')+'</div>':'')+
+    lastResult.prices.map(p=>'<div class="result-block"><div class="eyebrow">'+esc(p.label)+'</div><div class="price-value">от '+number(p.rate)+' ₽/м²</div><p class="price-total">Предварительно от '+number(p.total)+' ₽</p></div>').join('')+
+    (lastResult.prices.length>1?'<p class="why">Альтернативные варианты — их цены не складываются.</p>':'')+
+    '<p class="why">Ориентир по площади, не точная смета. Состав, оборудование и работы уточним с инженером.</p>';
+  const message=summaryText();$('message-text').value=message;
+  $('telegram-cta').href='https://t.me/'+CONTACTS.telegramUsername+'?text='+encodeURIComponent(message);
+  $('vk-cta').href=CONTACTS.vkMessagesUrl;
 }
-async function copy(text,status){
-  try{if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');await navigator.clipboard.writeText(text);status.textContent='Скопировано.';}
-  catch{const box=$('request-text');box.value=text;if(!$('request-dialog').open)$('request-dialog').showModal();box.focus();box.select();status=$('dialog-copy-status');status.textContent='Автоматическое копирование недоступно. Текст выделен — используйте «Копировать».';}
-}
-$('request').addEventListener('click',()=>{$('request-text').value=summaryText();$('dialog-copy-status').textContent='';$('request-dialog').showModal();});
-$('close-dialog').addEventListener('click',()=>$('request-dialog').close());
-$('copy-request').addEventListener('click',()=>copy($('request-text').value,$('dialog-copy-status')));
-$('copy-result').addEventListener('click',()=>copy(summaryText(),$('result-copy-status')));
-refresh();
-// Optional browser support; reads the same current state as the visible UI.
-if(document.modelContext?.registerTool){
-  const toolLifecycle=new AbortController();
+async function copyMessage(forVK=false){
+  const message=summaryText();if(!message)return;
   try{
-    Promise.resolve(document.modelContext.registerTool({
-      name:'read_calculator_configuration',title:'Прочитать конфигурацию',
-      description:'Прочитать активные поля и предварительную рекомендацию калькулятора VlasovTech. Не отправляет запрос и не рассчитывает цену.',
-      inputSchema:{type:'object',properties:{},additionalProperties:false},
-      annotations:{readOnlyHint:true,untrustedContentHint:true},
-      execute(input){
-        if(input===null||typeof input!=='object'||Array.isArray(input)||Object.keys(input).length)throw new Error('Ожидается пустой объект.');
-        const data=collect(),errors=getErrors(data),r=recommend(data);
-        return {active_fields:data,complete:errors.length===0,validation_errors:errors.map(e=>e.label),suggested_package:errors.length?null:r.package,suggested_system:errors.length?null:r.systems.map(x=>labelMaps.smart_system[x]),budget_status:'not_calculated'};
-      }
-    },{signal:toolLifecycle.signal})).catch(()=>{});
-    addEventListener('pagehide',()=>toolLifecycle.abort(),{once:true});
-  }catch{}
+    if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(message);
+    if(summaryText()!==message)return;
+    $('result-status').textContent=forVK?'Текст скопирован. Вставьте его в диалог VK и отправьте.':'Текст скопирован.';
+  }catch{
+    if(summaryText()!==message)return;
+    // Kept on this screen, including file/offline contexts and denied permissions.
+    $('manual-copy').hidden=false;$('manual-copy').open=true;$('message-text').value=message;
+    $('result-status').textContent='Автокопирование недоступно. Выделите готовый текст ниже и скопируйте его'+(forVK?' для диалога VK.':'.');
+    if(!forVK){$('message-text').focus();$('message-text').select();}
+  }
 }
+form.addEventListener('input',refresh);
+form.addEventListener('change',e=>{refresh();if(e.target.name==='main_priority'&&!lastResult.errors.length)$('result').scrollIntoView({block:'start'});});
+form.addEventListener('submit',e=>{e.preventDefault();validationRequested=true;refresh();if(lastResult.errors.length)form.querySelector(lastResult.errors[0].selector)?.focus();else{$('result').focus();$('result').scrollIntoView({block:'start'});}});
+form.addEventListener('reset',()=>{validationRequested=false;setTimeout(refresh,0);});
+$('copy-result').addEventListener('click',()=>copyMessage());
+// The native anchor opens synchronously; clipboard starts in the same user gesture.
+$('vk-cta').addEventListener('click',()=>{void copyMessage(true);});
+refresh();
+
 </script>
 </body>
 </html>
