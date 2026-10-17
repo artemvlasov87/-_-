@@ -88,6 +88,11 @@ html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto;scroll-b
 .slide[data-voice="night"] .orb{background:radial-gradient(circle at 35% 30%,#d7e5ff,#759cd2 48%,#284a7d 80%);box-shadow:0 0 35px #6ba3e588}
 .slide[data-voice="leave"] .orb{background:radial-gradient(circle at 35% 30%,#e9ffff,#5bb5d2 47%,#126077 80%);box-shadow:0 0 35px #3bc5e588}
 @media(max-width:800px),(pointer:coarse){.slide[data-curtain] .photo-bg{object-position:center center}.scene-metric .light-level,.scene-metric .curtain-track,.scene-metric .state-list{grid-column:1/-1;margin-top:4px}.scene-metric .state-list{padding-top:4px}.scene-metric .state-list>div,.voice-panel .state-list>div{min-height:24px;font-size:10px}.voice-panel .state-list{margin-top:9px}}
+@media(max-width:800px) and (orientation:portrait){
+  .scene-metric,.water-panel,.voice-panel{position:absolute;z-index:3;top:76px;right:20px;left:auto;transform:none;max-width:none;margin:0}
+  .scene-metric{width:min(250px,calc(100% - 40px))}
+  .water-panel,.voice-panel{width:min(350px,calc(100% - 40px))}
+}
 @media(orientation:landscape) and (max-height:540px){.scene-metric .state-list>div,.voice-panel .state-list>div{font-size:9px;min-height:23px}.voice-panel .state-list{margin-top:8px}.scene-metric strong{font-size:23px}}
 /* Запасной режим для телефона, чей браузер сообщает широкую десктопную область. */
 @media(min-width:801px) and (pointer:fine){
@@ -138,10 +143,11 @@ html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto;scroll-b
       <defs>
         <linearGradient id="curtainFabric" x1="0" x2="1"><stop stop-color="#70604f"/><stop offset=".13" stop-color="#b5a48e"/><stop offset=".25" stop-color="#897660"/><stop offset=".39" stop-color="#c4b39b"/><stop offset=".53" stop-color="#7b6957"/><stop offset=".68" stop-color="#b8a991"/><stop offset=".82" stop-color="#84715d"/><stop offset="1" stop-color="#c1ae95"/></linearGradient>
         <linearGradient id="curtainShade" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#372d24" stop-opacity=".4"/><stop offset=".12" stop-color="#fff" stop-opacity="0"/><stop offset=".92" stop-color="#2b241d" stop-opacity=".14"/><stop offset="1" stop-color="#291f19" stop-opacity=".4"/></linearGradient>
+        <clipPath id="curtainRoomMask"><path d="M408 54 H1290 V610 H900 V505 Q780 462 660 458 Q520 448 408 410 Z"/></clipPath>
       </defs>
       <path class="curtain-rail" d="M 408 54 H 1290"/>
-      <g class="curtain-left"><path d="M408 54 H849 V604 Q828 620 805 606 Q783 617 761 606 Q739 620 717 606 Q695 617 673 606 Q651 620 629 606 Q607 617 585 606 Q563 620 541 606 Q519 617 497 606 Q475 619 453 606 Q431 615 408 604 Z" fill="url(#curtainFabric)"/><path d="M408 54 H849 V604 H408 Z" fill="url(#curtainShade)"/></g>
-      <g class="curtain-right"><path d="M849 54 H1290 V604 Q1268 620 1246 606 Q1224 617 1202 606 Q1180 620 1158 606 Q1136 617 1114 606 Q1092 620 1070 606 Q1048 617 1026 606 Q1004 620 982 606 Q960 617 938 606 Q916 619 894 606 Q872 615 849 604 Z" fill="url(#curtainFabric)"/><path d="M849 54 H1290 V604 H849 Z" fill="url(#curtainShade)"/></g>
+      <g class="curtain-left" clip-path="url(#curtainRoomMask)"><path d="M408 54 H849 V604 Q828 620 805 606 Q783 617 761 606 Q739 620 717 606 Q695 617 673 606 Q651 620 629 606 Q607 617 585 606 Q563 620 541 606 Q519 617 497 606 Q475 619 453 606 Q431 615 408 604 Z" fill="url(#curtainFabric)"/><path d="M408 54 H849 V604 H408 Z" fill="url(#curtainShade)"/></g>
+      <g class="curtain-right" clip-path="url(#curtainRoomMask)"><path d="M849 54 H1290 V604 Q1268 620 1246 606 Q1224 617 1202 606 Q1180 620 1158 606 Q1136 617 1114 606 Q1092 620 1070 606 Q1048 617 1026 606 Q1004 620 982 606 Q960 617 938 606 Q916 619 894 606 Q872 615 849 604 Z" fill="url(#curtainFabric)"/><path d="M849 54 H1290 V604 H849 Z" fill="url(#curtainShade)"/></g>
     </svg>
     <div class="slide-scroll"><div class="content"><div class="copy"><p class="kicker">02 / Шторы</p><h2>Утро начинается <em>с нужного света.</em></h2><p class="lead">Откройте шторы утром, оставьте полутень днём или закройте их перед сном. Сценарий можно запустить кнопкой, голосом или по расписанию.</p><div class="demo"><div class="demo-head"><b>Попробуйте на экране</b><span>Выберите положение ↓</span></div><div class="choices" data-group="curtain"><button class="choice" data-value="open" aria-pressed="true">Открыты</button><button class="choice" data-value="half" aria-pressed="false">Полутень</button><button class="choice" data-value="closed" aria-pressed="false">Закрыты</button></div><div class="readout" id="curtainRead" role="status"><i></i><span><strong>Утро.</strong> Шторы открыты, в комнате дневной свет.</span></div></div></div></div></div>
     <div class="scene-metric" aria-hidden="true"><div class="overline">Положение штор</div><strong id="curtainMetric">Открыты</strong><p id="curtainMetricText">Мягкое начало дня</p><div class="curtain-track"><i></i><i></i></div><div class="line"><i></i></div></div>
